@@ -59,6 +59,11 @@ function BooksShowcase() {
                   {b.publisher || "Αγορά"} <ArrowRight className="size-3" strokeWidth={1.5} />
                 </a>
               )}
+              {b.url_alt && (
+                <a href={b.url_alt} target="_blank" rel="noopener noreferrer" className="block text-xs text-muted-foreground hover:text-primary transition-colors mt-0.5">
+                  Επίσης διαθέσιμο
+                </a>
+              )}
             </div>
           ))}
         </div>

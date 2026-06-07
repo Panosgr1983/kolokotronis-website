@@ -209,6 +209,11 @@ function AboutPage() {
                         {b.publisher || "Αγορά"} <ExternalLink className="size-3" strokeWidth={1.5} />
                       </a>
                     )}
+                    {b.url_alt && (
+                      <a href={b.url_alt} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 text-xs text-muted-foreground hover:text-primary transition-colors mt-1">
+                        Επίσης διαθέσιμο <ExternalLink className="size-3" strokeWidth={1.5} />
+                      </a>
+                    )}
                   </div>
                 ))}
               </div>

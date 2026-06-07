@@ -1,4 +1,4 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute } from "@tanstack/react-router";
 import { ArrowRight, BookOpen, ExternalLink } from "lucide-react";
 import { PageShell, PageHero } from "@/components/PageShell";
 import { CtaBand } from "@/components/CtaBand";
@@ -92,12 +92,24 @@ function BooksPage() {
                 </div>
 
                 {b.url && (
-                  <Link
-                    to={b.url}
+                  <a
+                    href={b.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
                     className="inline-flex items-center gap-1.5 text-sm text-primary font-medium hover:underline mt-4"
                   >
                     Αγοράστε το <ExternalLink className="size-3.5" strokeWidth={1.5} />
-                  </Link>
+                  </a>
+                )}
+                {b.url_alt && (
+                  <a
+                    href={b.url_alt}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-1 text-xs text-muted-foreground hover:text-primary transition-colors mt-1"
+                  >
+                    Επίσης διαθέσιμο <ExternalLink className="size-3" strokeWidth={1.5} />
+                  </a>
                 )}
               </div>
             </div>
