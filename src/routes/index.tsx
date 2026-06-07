@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { Calendar, ArrowRight, Phone, MapPin, PlayCircle, Leaf } from "lucide-react";
+import { Calendar, ArrowRight, Phone, MapPin, PlayCircle, Leaf, BookOpen } from "lucide-react";
 import { PageShell } from "@/components/PageShell";
 import { CtaBand } from "@/components/CtaBand";
 import { ValuesBand } from "@/components/ValuesBand";
@@ -17,6 +17,48 @@ function SectionTitle({ children }: { children: React.ReactNode }) {
       <h2 className="font-serif text-3xl md:text-4xl text-foreground">{children}</h2>
       <span className="block w-16 h-px bg-primary/60 mx-auto mt-4" />
     </div>
+  );
+}
+
+function BooksShowcase() {
+  const aboutBooks = useSiteSetting("about_books");
+  const enabled = useSiteSetting("home_books_showcase_enabled");
+  const showcaseTitle = (useSiteSetting("home_books_showcase_title") as string) || "Συγγραφικό Έργο";
+  const linkText = (useSiteSetting("home_books_showcase_link_text") as string) || "Δείτε όλα τα βιβλία";
+  const linkUrl = (useSiteSetting("home_books_showcase_link_url") as string) || "/books";
+  const books = Array.isArray(aboutBooks) ? [...aboutBooks].sort((a: any, b: any) => a.sort_order - b.sort_order).slice(0, 4) : [];
+
+  if (!enabled || books.length === 0) return null;
+
+  return (
+    <section className="bg-secondary/30 border-y border-border">
+      <div className="container-page py-20 md:py-24">
+        <div className="flex items-end justify-between mb-12 flex-wrap gap-4">
+          <h2 className="font-serif text-3xl md:text-4xl">{showcaseTitle}</h2>
+          <Link to={linkUrl} className="text-primary text-xs tracking-[0.2em] uppercase font-medium inline-flex items-center gap-2 hover:gap-3 transition-all">
+            {linkText} <ArrowRight className="size-4" />
+          </Link>
+        </div>
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+          {books.map((b: any, i: number) => (
+            <div key={i} className="group">
+              <div className="aspect-[3/4] rounded-2xl overflow-hidden bg-gradient-to-br from-primary/20 to-secondary mb-4">
+                {b.cover_image ? (
+                  <img src={b.cover_image} alt={b.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+                ) : (
+                  <div className="w-full h-full flex items-center justify-center p-6">
+                    <BookOpen className="size-8 text-primary/40 mx-auto mb-2" strokeWidth={1} />
+                    <p className="text-xs text-muted-foreground text-center line-clamp-2">{b.title}</p>
+                  </div>
+                )}
+              </div>
+              <h3 className="font-medium text-sm text-foreground leading-snug line-clamp-2">{b.title}</h3>
+              {b.subtitle && <p className="text-xs text-muted-foreground mt-1 line-clamp-1">{b.subtitle}</p>}
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
   );
 }
 
@@ -193,6 +235,8 @@ function HomePage() {
       </section>
 
       <ValuesBand />
+
+      <BooksShowcase />
 
       <section className="bg-background">
         <div className="container-page py-20 md:py-24">

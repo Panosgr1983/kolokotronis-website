@@ -11,16 +11,17 @@ export function SiteHeader() {
   const subtitle = (useSiteSetting("site_subtitle") as string) || "Ψυχολογος";
   const monogram = (useSiteSetting("site_monogram") as string) || "ΝΚ";
   const navLinks = (useSiteSetting("nav_links") as NavLink[]) || [];
+  const pageVisibility = (useSiteSetting("page_visibility") as Record<string, boolean>) || {};
   const ctaText = (useSiteSetting("header_cta_text") as string) || "Κλειστε ραντεβου";
   const ctaLink = (useSiteSetting("header_cta_link") as string) || "/contact";
 
-  const nav = navLinks.length > 0 ? navLinks : [
+  const nav = (navLinks.length > 0 ? navLinks : [
     { label: "Αρχικη", path: "/" },
     { label: "Σχετικα με εμενα", path: "/about" },
     { label: "Υπηρεσιες", path: "/services" },
     { label: "Αρθρα", path: "/blog" },
     { label: "Επικοινωνια", path: "/contact" },
-  ];
+  ]).filter(n => pageVisibility[n.path] !== false);
 
   return (
     <header className="sticky top-0 z-50 bg-background/90 backdrop-blur-md border-b border-border">

@@ -11,18 +11,19 @@ export function SiteFooter() {
   const tagline = (useSiteSetting("site_tagline") as string) || "Ένας ασφαλής χώρος για αυτογνωσία, ισορροπία και αλλαγή.";
   const copyright = (useSiteSetting("footer_copyright") as string) || "Νικόλας Κολοκοτρώνης — Ψυχολόγος · Νέο Ηράκλειο";
   const footerNavLinks = (useSiteSetting("footer_nav_links") as NavLink[]) || [];
+  const pageVisibility = (useSiteSetting("page_visibility") as Record<string, boolean>) || {};
   const facebookUrl = (useSiteSetting("contact_social_facebook_url") as string) || "https://www.facebook.com/nikolas.kolokotronis/";
   const phone = (useSiteSetting("contact_phone_hint") as string) || "+30 697 437 1139";
   const addressLabel = (useSiteSetting("contact_address_label") as string) || "Απόλλωνος 30, ισόγειο";
   const addressHint = (useSiteSetting("contact_address_hint") as string) || "Νέο Ηράκλειο, Αθήνα";
 
-  const nav = footerNavLinks.length > 0 ? footerNavLinks : [
+  const nav = (footerNavLinks.length > 0 ? footerNavLinks : [
     { label: "Αρχική", path: "/" },
     { label: "Σχετικά με εμένα", path: "/about" },
     { label: "Υπηρεσίες", path: "/services" },
     { label: "Άρθρα", path: "/blog" },
     { label: "Επικοινωνία", path: "/contact" },
-  ];
+  ]).filter(n => pageVisibility[n.path] !== false);
 
   return (
     <footer className="bg-footer text-footer-foreground mt-20">
@@ -84,8 +85,8 @@ export function SiteFooter() {
         <div className="container-page py-5 text-xs text-footer-foreground/60 flex flex-col sm:flex-row justify-between gap-3">
           <span>© {new Date().getFullYear()} {copyright}</span>
           <div className="flex gap-5">
-            <Link to="/privacy" className="hover:text-footer-foreground">Πολιτική Απορρήτου</Link>
-            <Link to="/terms" className="hover:text-footer-foreground">Όροι Χρήσης</Link>
+            {pageVisibility['/privacy'] !== false && <Link to="/privacy" className="hover:text-footer-foreground">Πολιτική Απορρήτου</Link>}
+            {pageVisibility['/terms'] !== false && <Link to="/terms" className="hover:text-footer-foreground">Όροι Χρήσης</Link>}
           </div>
         </div>
       </div>
