@@ -2,7 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { ArrowLeft, Calendar } from "lucide-react";
 import { PageShell } from "@/components/PageShell";
 import { CtaBand } from "@/components/CtaBand";
-import { useServiceBySlug } from "@/lib/content-hooks";
+import { useServiceBySlug, usePageData } from "@/lib/content-hooks";
 import { getIcon } from "@/lib/icon-map";
 
 export const Route = createFileRoute("/services/$slug")({
@@ -12,6 +12,7 @@ export const Route = createFileRoute("/services/$slug")({
 function ServiceDetailPage() {
   const { slug } = Route.useParams();
   const { data: service, isLoading } = useServiceBySlug(slug);
+  const svcPageData = usePageData()[`/services/${slug}`] || {};
 
   if (isLoading) {
     return (
@@ -39,7 +40,7 @@ function ServiceDetailPage() {
     <PageShell>
       <div
         className="relative h-[40vh] md:h-[50vh] min-h-[320px] bg-fixed bg-center bg-cover"
-        style={service.image_url ? { backgroundImage: `url(${service.image_url})` } : undefined}
+        style={(service.image_url || svcPageData.hero_image) ? { backgroundImage: `url(${service.image_url || svcPageData.hero_image})` } : undefined}
       >
         <div className="absolute inset-0 bg-gradient-to-t from-background via-background/40 to-transparent" />
         <div className="absolute bottom-0 left-0 right-0 container-page pb-10">
