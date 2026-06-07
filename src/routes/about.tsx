@@ -149,22 +149,19 @@ function AboutPage() {
         </div>
       </section>
 
-      <section className="bg-secondary/30 border-y border-border">
+      <section className="border-y border-border">
         <div className="container-page py-16 md:py-20">
           <h2 className="font-serif text-3xl md:text-4xl mb-10">{credsTitle}</h2>
           {credsLoading ? (
             <div className="flex justify-center py-10"><div className="size-8 border-2 border-primary/30 border-t-primary rounded-full animate-spin" /></div>
           ) : (
-            <div className="grid md:grid-cols-2 gap-6">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
               {credentials.map((c) => {
                 const Icon = getIcon(c.icon);
                 return (
-                  <div key={c.id} className="flex items-start gap-4 card-soft p-6">
-                    <Icon className="size-6 text-primary mt-0.5 shrink-0" strokeWidth={1.5} />
-                    <div>
-                      <p className="text-foreground font-medium">{c.title}</p>
-                      <p className="text-sm text-muted-foreground mt-1">{c.description}</p>
-                    </div>
+                  <div key={c.id} className="flex items-center gap-3 justify-center text-center md:text-left">
+                    <Icon className="size-5 text-primary shrink-0" strokeWidth={1.5} />
+                    <span className="text-sm font-medium text-foreground/80">{c.title}</span>
                   </div>
                 );
               })}

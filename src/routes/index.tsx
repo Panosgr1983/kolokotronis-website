@@ -4,7 +4,7 @@ import { PageShell } from "@/components/PageShell";
 import { CtaBand } from "@/components/CtaBand";
 import { ValuesBand } from "@/components/ValuesBand";
 import { ContactForm } from "@/components/ContactForm";
-import { useServices, useBlogPosts, useTestimonials, useCredentials, useSiteSetting } from "@/lib/content-hooks";
+import { useServices, useBlogPosts, useTestimonials, useSiteSetting } from "@/lib/content-hooks";
 import { getIcon } from "@/lib/icon-map";
 
 export const Route = createFileRoute("/")({
@@ -122,7 +122,6 @@ function HomePage() {
   const { data: services = [], isLoading: servicesLoading } = useServices();
   const { data: blogPosts = [], isLoading: blogLoading } = useBlogPosts();
   const { data: testimonials = [], isLoading: testimonialsLoading } = useTestimonials();
-  const { data: credentials = [], isLoading: credsLoading } = useCredentials();
 
   const heroHeading = (useSiteSetting("hero_heading") as string) || "Κατανόηση.\nΑποδοχή.\nΑλλαγή.";
   const heroSubtitle = (useSiteSetting("hero_subtitle") as string) || "Ένας ασφαλής χώρος για να μιλήσετε, να κατανοήσετε, να προχωρήσετε.";
@@ -196,7 +195,7 @@ function HomePage() {
                     <Icon className="size-9" strokeWidth={1.25} />
                   </div>
                   <h3 className="font-serif text-lg md:text-xl mb-3 text-foreground">{s.title}</h3>
-                  <p className="text-sm text-muted-foreground leading-relaxed">{s.short_description}</p>
+                  <p className="text-sm text-muted-foreground leading-relaxed line-clamp-1">{s.short_description}</p>
                 </article>
               );
             })}
@@ -226,22 +225,6 @@ function HomePage() {
             )}
           </div>
         </div>
-      </section>
-
-      <section className="container-page py-12">
-        {credsLoading ? null : (
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-            {credentials.map((c) => {
-              const Icon = getIcon(c.icon);
-              return (
-                <div key={c.id} className="flex items-center gap-3 justify-center text-center md:text-left">
-                  <Icon className="size-5 text-primary shrink-0" strokeWidth={1.5} />
-                  <span className="text-sm font-medium text-foreground/80">{c.title}</span>
-                </div>
-              );
-            })}
-          </div>
-        )}
       </section>
 
       <ValuesBand />
