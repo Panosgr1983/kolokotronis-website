@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { GraduationCap, ShieldCheck, Award, BookOpen, Globe, Star, ArrowRight, Clock, Book, Heart, Sparkles, GraduationCap as GraduationIcon, Award as AwardIcon, ChevronLeft, ChevronRight } from "lucide-react";
+import { GraduationCap, ShieldCheck, Award, BookOpen, Globe, Star, ArrowRight, Clock, Book, Heart, Sparkles, GraduationCap as GraduationIcon, Award as AwardIcon, ChevronLeft, ChevronRight, ExternalLink } from "lucide-react";
 import { PageShell, PageHero } from "@/components/PageShell";
 import { CtaBand } from "@/components/CtaBand";
 import { ValuesBand } from "@/components/ValuesBand";
@@ -204,6 +204,11 @@ function AboutPage() {
                     </div>
                     <h3 className="font-medium text-sm text-foreground leading-snug">{b.title}</h3>
                     {b.subtitle && <p className="text-xs text-muted-foreground mt-1">{b.subtitle}</p>}
+                    {b.url && (
+                      <a href={b.url} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 text-xs text-primary font-medium hover:underline mt-2">
+                        {b.publisher || "Αγορά"} <ExternalLink className="size-3" strokeWidth={1.5} />
+                      </a>
+                    )}
                   </div>
                 ))}
               </div>

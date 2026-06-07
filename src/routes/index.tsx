@@ -54,6 +54,11 @@ function BooksShowcase() {
               </div>
               <h3 className="font-medium text-sm text-foreground leading-snug line-clamp-2">{b.title}</h3>
               {b.subtitle && <p className="text-xs text-muted-foreground mt-1 line-clamp-1">{b.subtitle}</p>}
+              {b.url && (
+                <a href={b.url} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 text-xs text-primary font-medium hover:underline mt-2">
+                  {b.publisher || "Αγορά"} <ArrowRight className="size-3" strokeWidth={1.5} />
+                </a>
+              )}
             </div>
           ))}
         </div>
