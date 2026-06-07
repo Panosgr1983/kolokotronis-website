@@ -1,5 +1,0 @@
-{
-  "buildCommand": "NITRO_PRESET=vercel npx vite build",
-  "outputDirectory": "dist",
-  "framework": null
-}
