@@ -1,7 +1,12 @@
 {
   "$schema": "node_modules/wrangler/config-schema.json",
-  "name": "tanstack-start-app",
+  "name": "kolokotronis-website",
   "compatibility_date": "2025-09-24",
   "compatibility_flags": ["nodejs_compat"],
-  "main": "src/server.ts",
+  "main": "dist/server/index.mjs",
+  "assets": {
+    "binding": "ASSETS",
+    "directory": "dist/client"
+  },
+  "account_id": "94b5edc5fc91ada10fe8a213cca836cb"
 }
