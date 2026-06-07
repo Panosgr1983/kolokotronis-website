@@ -3,7 +3,7 @@ import { useRouterState } from "@tanstack/react-router";
 import { ArrowRight } from "lucide-react";
 import { PageShell, PageHero } from "@/components/PageShell";
 import { CtaBand } from "@/components/CtaBand";
-import { useServices } from "@/lib/content-hooks";
+import { useServices, usePageData } from "@/lib/content-hooks";
 import { getIcon } from "@/lib/icon-map";
 
 export const Route = createFileRoute("/services")({
@@ -22,6 +22,7 @@ function ServicesPage() {
   const { data: services = [], isLoading } = useServices();
   const pathname = useRouterState({ select: (s) => s.location.pathname });
   const isIndex = pathname === '/services';
+  const servicesPage = usePageData()["/services"] || {};
 
   if (!isIndex) return <Outlet />;
 
@@ -29,8 +30,9 @@ function ServicesPage() {
     <PageShell>
       <PageHero
         eyebrow="Υπηρεσίες"
-        title="Υπηρεσίες & προσεγγίσεις"
-        subtitle="Επιλέξτε την προσέγγιση που ταιριάζει σε εσάς — ή ας τη βρούμε μαζί."
+        title={servicesPage.title || "Υπηρεσίες & προσεγγίσεις"}
+        subtitle={servicesPage.subtitle || "Επιλέξτε την προσέγγιση που ταιριάζει σε εσάς — ή ας τη βρούμε μαζί."}
+        backgroundImage={servicesPage.hero_image}
       />
 
       <section className="container-page py-16 md:py-20">

@@ -113,10 +113,10 @@ function BlogPostPage() {
   return (
     <PageShell>
       <article>
-        <div className="relative h-[40vh] md:h-[50vh] min-h-[320px] bg-secondary/30">
-          {post.image_url && (
-            <img src={post.image_url} alt={post.title} className="w-full h-full object-cover" />
-          )}
+        <div
+          className="relative h-[40vh] md:h-[50vh] min-h-[320px] bg-fixed bg-center bg-cover"
+          style={post.image_url ? { backgroundImage: `url(${post.image_url})` } : undefined}
+        >
           <div className="absolute inset-0 bg-gradient-to-t from-background via-background/40 to-transparent" />
           <div className="absolute bottom-0 left-0 right-0 container-page pb-10">
             <Link to="/blog" className="inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors mb-4">

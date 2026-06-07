@@ -3,7 +3,7 @@ import { GraduationCap, ShieldCheck, Award, BookOpen, Globe, Star, ArrowRight, C
 import { PageShell, PageHero } from "@/components/PageShell";
 import { CtaBand } from "@/components/CtaBand";
 import { ValuesBand } from "@/components/ValuesBand";
-import { useCredentials, useSiteSetting } from "@/lib/content-hooks";
+import { useCredentials, useSiteSetting, usePageData } from "@/lib/content-hooks";
 import { getIcon } from "@/lib/icon-map";
 
 export const Route = createFileRoute("/about")({
@@ -21,11 +21,12 @@ function AchievementIcon({ name }: { name: string }) {
 
 function AboutPage() {
   const { data: credentials = [], isLoading: credsLoading } = useCredentials();
+  const aboutPage = usePageData()["/about"] || {};
 
   const heroEyebrow = (useSiteSetting("about_hero_eyebrow") as string) || "Σχετικά";
-  const heroTitle = (useSiteSetting("about_hero_title") as string) || "Η ιστορία, η φιλοσοφία & η διαδρομή μου";
-  const heroSubtitle = (useSiteSetting("about_hero_subtitle") as string) || "Γνωρίστε με λίγα λόγια το ποιος είμαι και τι με οδήγησε σε αυτή τη δουλειά.";
-  const heroImage = (useSiteSetting("about_hero_image") as string) || "";
+  const heroTitle = (useSiteSetting("about_hero_title") as string) || aboutPage.title || "Η ιστορία, η φιλοσοφία & η διαδρομή μου";
+  const heroSubtitle = (useSiteSetting("about_hero_subtitle") as string) || aboutPage.subtitle || "Γνωρίστε με λίγα λόγια το ποιος είμαι και τι με οδήγησε σε αυτή τη δουλειά.";
+  const heroImage = (useSiteSetting("about_hero_image") as string) || aboutPage.hero_image || "";
   const heroPositioning = (useSiteSetting("about_hero_positioning") as string) || "";
 
   const bioEyebrow = (useSiteSetting("about_bio_eyebrow") as string) || "Λιγα λογια για εμενα";
@@ -56,12 +57,10 @@ function AboutPage() {
   return (
     <PageShell>
       {heroImage ? (
-        <section className="relative h-[60vh] min-h-[420px] bg-secondary/30">
-          <img
-            src={heroImage}
-            alt={heroTitle || "About Hero Image"}
-            className="w-full h-full object-cover"
-          />
+        <section
+          className="relative h-[60vh] min-h-[420px] bg-fixed bg-center bg-cover"
+          style={{ backgroundImage: `url(${heroImage})` }}
+        >
           <div className="absolute inset-0 bg-gradient-to-t from-background via-background/50 to-background/20" />
           <div className="absolute inset-0 bg-black/40" />
           <div className="absolute bottom-0 left-0 right-0 container-page pb-12 md:pb-16">

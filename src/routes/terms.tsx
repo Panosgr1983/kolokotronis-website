@@ -1,5 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { PageShell, PageHero } from "@/components/PageShell";
+import { usePageData } from "@/lib/content-hooks";
 
 export const Route = createFileRoute("/terms")({
   head: () => ({
@@ -12,12 +13,14 @@ export const Route = createFileRoute("/terms")({
 });
 
 function TermsPage() {
+  const termsPage = usePageData()["/terms"] || {};
   return (
     <PageShell>
       <PageHero
         eyebrow="Νομικά"
-        title="Όροι Χρήσης"
-        subtitle="Παρακαλώ διαβάστε προσεκτικά τους όρους που διέπουν τη χρήση της ιστοσελίδας και των υπηρεσιών."
+        title={termsPage.title || "Όροι Χρήσης"}
+        subtitle={termsPage.subtitle || "Παρακαλώ διαβάστε προσεκτικά τους όρους που διέπουν τη χρήση της ιστοσελίδας και των υπηρεσιών."}
+        backgroundImage={termsPage.hero_image}
       />
       <section className="container-page py-12 md:py-16 max-w-3xl">
         <div className="space-y-6 text-muted-foreground leading-relaxed">

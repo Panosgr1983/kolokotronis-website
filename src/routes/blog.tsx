@@ -2,7 +2,7 @@ import { createFileRoute, Link, Outlet } from "@tanstack/react-router";
 import { useRouterState } from "@tanstack/react-router";
 import { ArrowRight } from "lucide-react";
 import { PageShell, PageHero } from "@/components/PageShell";
-import { useBlogPosts } from "@/lib/content-hooks";
+import { useBlogPosts, usePageData } from "@/lib/content-hooks";
 
 export const Route = createFileRoute("/blog")({
   head: () => ({
@@ -28,6 +28,7 @@ function BlogPage() {
   const { data: posts = [], isLoading } = useBlogPosts();
   const pathname = useRouterState({ select: (s) => s.location.pathname });
   const isIndex = pathname === '/blog';
+  const blogPage = usePageData()["/blog"] || {};
 
   if (!isIndex) return <Outlet />;
 
@@ -35,8 +36,9 @@ function BlogPage() {
     <PageShell>
       <PageHero
         eyebrow="Άρθρα"
-        title="Σκέψεις για την ψυχική υγεία"
-        subtitle="Άρθρα για την αυτογνωσία, τις σχέσεις και τη συνολική ευεξία."
+        title={blogPage.title || "Σκέψεις για την ψυχική υγεία"}
+        subtitle={blogPage.subtitle || "Άρθρα για την αυτογνωσία, τις σχέσεις και τη συνολική ευεξία."}
+        backgroundImage={blogPage.hero_image}
       />
 
       <section className="container-page py-16 md:py-20">

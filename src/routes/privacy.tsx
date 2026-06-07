@@ -1,5 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { PageShell, PageHero } from "@/components/PageShell";
+import { usePageData } from "@/lib/content-hooks";
 
 export const Route = createFileRoute("/privacy")({
   head: () => ({
@@ -12,12 +13,14 @@ export const Route = createFileRoute("/privacy")({
 });
 
 function PrivacyPage() {
+  const privacyPage = usePageData()["/privacy"] || {};
   return (
     <PageShell>
       <PageHero
         eyebrow="Νομικά"
-        title="Πολιτική Απορρήτου"
-        subtitle="Πώς συλλέγονται, χρησιμοποιούνται και προστατεύονται τα προσωπικά σας δεδομένα."
+        title={privacyPage.title || "Πολιτική Απορρήτου"}
+        subtitle={privacyPage.subtitle || "Πώς συλλέγονται, χρησιμοποιούνται και προστατεύονται τα προσωπικά σας δεδομένα."}
+        backgroundImage={privacyPage.hero_image}
       />
       <section className="container-page py-12 md:py-16 max-w-3xl">
         <div className="prose-content space-y-6 text-muted-foreground leading-relaxed">

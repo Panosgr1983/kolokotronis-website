@@ -122,3 +122,17 @@ export function useSiteSetting(key: string) {
   const { data: settings } = useSiteSettings();
   return settings?.[key];
 }
+
+export type PageDataEntry = {
+  hero_image?: string;
+  title?: string;
+  subtitle?: string;
+};
+
+export type PageData = Record<string, PageDataEntry>;
+
+export function usePageData(): PageData {
+  const raw = useSiteSetting("page_data");
+  if (!raw || typeof raw !== "object") return {};
+  return raw as PageData;
+}

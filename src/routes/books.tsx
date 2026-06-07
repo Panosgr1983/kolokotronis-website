@@ -2,15 +2,16 @@ import { createFileRoute } from "@tanstack/react-router";
 import { ArrowRight, BookOpen, ExternalLink } from "lucide-react";
 import { PageShell, PageHero } from "@/components/PageShell";
 import { CtaBand } from "@/components/CtaBand";
-import { useSiteSetting } from "@/lib/content-hooks";
+import { useSiteSetting, usePageData } from "@/lib/content-hooks";
 
 export const Route = createFileRoute("/books")({
   component: BooksPage,
 });
 
 function BooksPage() {
-  const heroTitle = (useSiteSetting("books_hero_title") as string) || "Συγγραφικό Έργο";
-  const heroSubtitle = (useSiteSetting("books_hero_subtitle") as string) || "Τα βιβλία & οι εκδόσεις μου";
+  const booksPage = usePageData()["/books"] || {};
+  const heroTitle = (useSiteSetting("books_hero_title") as string) || booksPage.title || "Συγγραφικό Έργο";
+  const heroSubtitle = (useSiteSetting("books_hero_subtitle") as string) || booksPage.subtitle || "Τα βιβλία & οι εκδόσεις μου";
 
   const aboutBooks = useSiteSetting("about_books");
   const books = Array.isArray(aboutBooks)
@@ -20,7 +21,7 @@ function BooksPage() {
   if (books.length === 0) {
     return (
       <PageShell>
-        <PageHero title={heroTitle} subtitle={heroSubtitle} />
+        <PageHero title={heroTitle} subtitle={heroSubtitle} backgroundImage={booksPage.hero_image} />
         <section className="container-page py-20 text-center">
           <BookOpen className="size-16 text-muted-foreground/30 mx-auto mb-4" strokeWidth={1} />
           <p className="text-muted-foreground">Τα βιβλία θα προστεθούν σύντομα.</p>
@@ -32,7 +33,7 @@ function BooksPage() {
 
   return (
     <PageShell>
-      <PageHero title={heroTitle} subtitle={heroSubtitle} />
+      <PageHero title={heroTitle} subtitle={heroSubtitle} backgroundImage={booksPage.hero_image} />
 
       <section className="container-page py-16 md:py-20">
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-10">

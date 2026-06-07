@@ -2,16 +2,17 @@ import { createFileRoute } from "@tanstack/react-router";
 import { Phone, MapPin, Facebook, Clock } from "lucide-react";
 import { PageShell, PageHero } from "@/components/PageShell";
 import { ContactForm } from "@/components/ContactForm";
-import { useSiteSetting } from "@/lib/content-hooks";
+import { useSiteSetting, usePageData } from "@/lib/content-hooks";
 
 export const Route = createFileRoute("/contact")({
   component: ContactPage,
 });
 
 function ContactPage() {
+  const contactPage = usePageData()["/contact"] || {};
   const heroEyebrow = (useSiteSetting("contact_hero_eyebrow") as string) || "Επικοινωνία";
-  const heroTitle = (useSiteSetting("contact_hero_title") as string) || "Κλείστε το ραντεβού σας";
-  const heroSubtitle = (useSiteSetting("contact_hero_subtitle") as string) || "Επικοινωνήστε για μια πρώτη γνωριμία ή για να ορίσουμε συνεδρία.";
+  const heroTitle = (useSiteSetting("contact_hero_title") as string) || contactPage.title || "Κλείστε το ραντεβού σας";
+  const heroSubtitle = (useSiteSetting("contact_hero_subtitle") as string) || contactPage.subtitle || "Επικοινωνήστε για μια πρώτη γνωριμία ή για να ορίσουμε συνεδρία.";
 
   const phoneLabel = (useSiteSetting("contact_phone_label") as string) || "Τηλέφωνο";
   const phoneHint = (useSiteSetting("contact_phone_hint") as string) || "+30 697 437 1139";
@@ -39,6 +40,7 @@ function ContactPage() {
         eyebrow={heroEyebrow}
         title={heroTitle}
         subtitle={heroSubtitle}
+        backgroundImage={contactPage.hero_image}
       />
 
       <section className="container-page py-16 md:py-20 grid lg:grid-cols-2 gap-10">

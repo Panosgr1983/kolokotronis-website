@@ -4,7 +4,7 @@ import { PageShell } from "@/components/PageShell";
 import { CtaBand } from "@/components/CtaBand";
 import { ValuesBand } from "@/components/ValuesBand";
 import { ContactForm } from "@/components/ContactForm";
-import { useServices, useBlogPosts, useTestimonials, useSiteSetting } from "@/lib/content-hooks";
+import { useServices, useBlogPosts, useTestimonials, useSiteSetting, usePageData } from "@/lib/content-hooks";
 import { getIcon } from "@/lib/icon-map";
 
 export const Route = createFileRoute("/")({
@@ -122,14 +122,15 @@ function HomePage() {
   const { data: services = [], isLoading: servicesLoading } = useServices();
   const { data: blogPosts = [], isLoading: blogLoading } = useBlogPosts();
   const { data: testimonials = [], isLoading: testimonialsLoading } = useTestimonials();
+  const homePage = usePageData()["/"] || {};
 
-  const heroHeading = (useSiteSetting("hero_heading") as string) || "Κατανόηση.\nΑποδοχή.\nΑλλαγή.";
-  const heroSubtitle = (useSiteSetting("hero_subtitle") as string) || "Ένας ασφαλής χώρος για να μιλήσετε, να κατανοήσετε, να προχωρήσετε.";
+  const heroHeading = (useSiteSetting("hero_heading") as string) || homePage.title || "Κατανόηση.\nΑποδοχή.\nΑλλαγή.";
+  const heroSubtitle = (useSiteSetting("hero_subtitle") as string) || homePage.subtitle || "Ένας ασφαλής χώρος για να μιλήσετε, να κατανοήσετε, να προχωρήσετε.";
   const heroCtaPrimaryText = (useSiteSetting("hero_cta_primary_text") as string) || "Μαθετε περισσοτερα";
   const heroCtaPrimaryLink = (useSiteSetting("hero_cta_primary_link") as string) || "/about";
   const heroCtaSecondaryText = (useSiteSetting("hero_cta_secondary_text") as string) || "Πως μπορω να σας βοηθησω";
   const heroCtaSecondaryLink = (useSiteSetting("hero_cta_secondary_link") as string) || "/services";
-  const heroImage = (useSiteSetting("hero_image") as string) || "";
+  const heroImage = (useSiteSetting("hero_image") as string) || homePage.hero_image || "";
 
   const servicesSectionTitle = (useSiteSetting("services_section_title") as string) || "Πώς μπορώ να σας βοηθήσω";
   const servicesSectionLinkText = (useSiteSetting("services_section_link_text") as string) || "Ολες οι υπηρεσιες";

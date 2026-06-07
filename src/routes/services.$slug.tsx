@@ -37,10 +37,10 @@ function ServiceDetailPage() {
 
   return (
     <PageShell>
-      <div className="relative h-[40vh] md:h-[50vh] min-h-[320px] bg-secondary/30">
-        {service.og_image && (
-          <img src={service.og_image} alt={service.title} className="w-full h-full object-cover" />
-        )}
+      <div
+        className="relative h-[40vh] md:h-[50vh] min-h-[320px] bg-fixed bg-center bg-cover"
+        style={service.image_url ? { backgroundImage: `url(${service.image_url})` } : undefined}
+      >
         <div className="absolute inset-0 bg-gradient-to-t from-background via-background/40 to-transparent" />
         <div className="absolute bottom-0 left-0 right-0 container-page pb-10">
           <Link to="/services" className="inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors mb-4">
