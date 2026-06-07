@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { GraduationCap, ShieldCheck, Award, BookOpen, Globe, Star, ArrowRight, Clock, Book, Heart, Sparkles, GraduationCap as GraduationIcon, Award as AwardIcon } from "lucide-react";
+import { GraduationCap, ShieldCheck, Award, BookOpen, Globe, Star, ArrowRight, Clock, Book, Heart, Sparkles, GraduationCap as GraduationIcon, Award as AwardIcon, ChevronLeft, ChevronRight } from "lucide-react";
 import { PageShell, PageHero } from "@/components/PageShell";
 import { CtaBand } from "@/components/CtaBand";
 import { ValuesBand } from "@/components/ValuesBand";
@@ -47,13 +47,8 @@ function AboutPage() {
   const credsTitle = (useSiteSetting("credentials_section_title") as string) || "Πιστοποιήσεις & σπουδές";
 
   const paragraphs = bioParagraphs.length > 0 ? bioParagraphs : [
-    "Έχω σπουδάσει Ψυχολογία στο Πάντειο Πανεπιστήμιο Αθηνών, Προσωποκεντρική & Focusing-Βιωματική Ψυχοθεραπεία (Ελληνικό Κέντρο Focusing), Συνθετική Συμβουλευτική Ψυχικής Υγείας (Athens Synthesis Center), Ρέικι (master, Illium Center of Light), Regression Therapy (International Institute for Consciousness Exploration and Psychotherapy – Vitor Rodrigues), EMDR (EMDR Hellas Ινστιτούτο Τραυματοθεραπείας), IADC (Cesar Valdez), Bodynamic (Foundation, Bodynamic Greece), Ενεργειακή Διατροφολογία (Natural Health Science), Ανθοϊάματα Μπαχ (N.H.S.), Ρεφλεξολογία (N.H.S.), NLP (N.H.S.), Grief Support (Taking Flight International Corporation – Jane Simington), Trauma Recovery (T.F.I.C. – Jane Simington), Συστημική Σκέψη & Πράξη κατά Hellinger (Αλφάβητο Ζωής), Εθισμός & Συνεξάρτηση, Τα 12 βήματα απεξάρτησης (Τάσος Λάμπρου). Στις μεθόδους που χρησιμοποιώ συγκαταλέγονται επίσης ο Διαλογισμός, ο Οραματισμός, Το Μονοπάτι της Ευτυχίας, η Pre-Therapy και το Mindfulness.",
-    "Έχω παρακολουθήσει βιωματικά σεμινάρια και ομιλίες με σημαντικούς δασκάλους και επιστήμονες όπως οι Hans TenDam, Marion Boon, Jane Simington, Vitor Rodrigues, Dr. Joe Dispenza, Irvin Yalom, Deepak Chopra, Wayne Dyer, Naomi Stephan, Julia Hastings, Patrick Holford, Jane Peterson, Uri Geller, Marlo Morgan, Alan Kohen, Colin Turner, Sonia Shoquette, Bert Hellinger, Sharlotte Palmgren και Cesar Valdez.",
-    "Έχω ολοκληρώσει εξ αποστάσεως σεμινάρια: Caring for people with psychosis and schizophrenia (King's College, London), Palliative care (King's College, London), The Science of Happiness (Berkeley University, California) και Θετική Ψυχολογία (Πάντειο Πανεπιστήμιο).",
-    "Έκανα πρακτική ως ψυχοθεραπευτής και εθελοντισμό στο Οικοτροφείο Αγίου Νικολάου της ΑμΚΕ ΙΑΣΙΣ για 19 μήνες. Εργάστηκα για δύο χρόνια ως ψυχολόγος στην Κοινωνική Υπηρεσία του Δήμου Γαλατσίου.",
-    "Έχω γράψει εννέα βιβλία: ποίηση (4), διηγήματα (1), το μυθιστόρημα αυτογνωσίας «Το Μαγικό Ταξίδι» (εκδόσεις Διόπτρα) — το οποίο απέσπασε το Α' Βραβείο Μυθιστορήματος 2008 από τη Διεθνή Εταιρεία Ελλήνων Λογοτεχνών — τις κάρτες αυτογνωσίας, αγάπης & εξέλιξης «Μηνύματα & Επαφή με τους Αγίους» (εκδόσεις Κρύων) και το ομότιτλο βιβλίο. Το νέο μου μυθιστόρημα αυτογνωσίας έχει τίτλο «Tabula Rasa – Η Άγραφη Πλάκα της Ψυχής» (εκδόσεις Ιβίσκος).",
-    "Έχω συνεργαστεί ως στιχουργός με τον Φίλιππο Πλιάτσικα, τον Γιάννη Ζουγανέλη, την Πόπη Αστεριάδη, το συγκρότημα Ο.Μ.Ν.Ι.Α. και τον Αλέξανδρο Θεοδωρή. Έχω επιμεληθεί βιβλία της Doreen Virtue («Πορεία προς το φως», «Θεϊκή καθοδήγηση»), των Lee Carroll & Jan Tober («Παιδιά σε βαθύ μπλε»), του Bert Hellinger («Μονοπάτια της αγάπης», «Η φαινομενολογική σκέψη του Bert Hellinger») και της Sharlotte Palmgren («Αν ήξερες πόσο πολύ σε αγαπώ»).",
-    "Είμαι μέλος του ΣΕΨ (Σύλλογος Ελλήνων Ψυχολόγων) και του TIFI (The International Focusing Institute – New York). Ο χώρος μου βρίσκεται στο Νέο Ηράκλειο, λίγα βήματα από τον ηλεκτρικό σταθμό, και είναι φτιαγμένος για να νιώθετε άνετα, ασφαλείς και ελεύθεροι να εκφραστείτε.",
+    "Είμαι ψυχολόγος, ψυχοθεραπευτής και Reiki Master, με έδρα το Νέο Ηράκλειο. Εδώ και χρόνια συνοδεύω ανθρώπους στο ταξίδι της αυτογνωσίας, της εσωτερικής ισορροπίας και της προσωπικής τους εξέλιξης.",
+    "Στον χώρο μου, που βρίσκεται λίγα βήματα από τον ηλεκτρικό σταθμό, θα νιώσετε άνετα, ασφαλείς και ελεύθεροι να εκφραστείτε. Η προσέγγισή μου είναι ανθρωποκεντρική, συνδυάζοντας ψυχοθεραπευτικές μεθόδους, ενεργειακές πρακτικές και πνευματική καθοδήγηση, προσαρμοσμένες στις ανάγκες του κάθε ανθρώπου.",
   ];
 
   const insertQuoteIdx = Math.min(2, paragraphs.length);
@@ -154,43 +149,6 @@ function AboutPage() {
         </div>
       </section>
 
-      {books.length > 0 && (
-        <section className="bg-secondary/30 border-y border-border">
-          <div className="container-page py-16 md:py-20">
-            <h2 className="font-serif text-3xl md:text-4xl mb-10">Συγγραφικό Έργο</h2>
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-              {books.map((b, i) => (
-                <div key={i} className="group">
-                  <div className="aspect-[3/4] rounded-2xl overflow-hidden bg-gradient-to-br from-primary/20 to-secondary mb-4">
-                    {b.cover_image ? (
-                      <img src={b.cover_image} alt={b.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
-                    ) : (
-                      <div className="w-full h-full flex items-center justify-center p-6">
-                        <div className="text-center">
-                          <BookOpen className="size-8 text-primary/40 mx-auto mb-2" strokeWidth={1} />
-                          <p className="text-xs text-muted-foreground text-center line-clamp-2">{b.title}</p>
-                        </div>
-                      </div>
-                    )}
-                  </div>
-                  <h3 className="font-medium text-sm text-foreground leading-snug">{b.title}</h3>
-                  {b.subtitle && (
-                    <p className="text-xs text-muted-foreground mt-1">{b.subtitle}</p>
-                  )}
-                </div>
-              ))}
-            </div>
-            {booksCtaText && booksCtaUrl && (
-              <div className="mt-10 text-center">
-                <Link to={booksCtaUrl} className="btn-cta inline-flex items-center gap-2">
-                  {booksCtaText} <ArrowRight className="size-4" />
-                </Link>
-              </div>
-            )}
-          </div>
-        </section>
-      )}
-
       <section className="bg-secondary/30 border-y border-border">
         <div className="container-page py-16 md:py-20">
           <h2 className="font-serif text-3xl md:text-4xl mb-10">{credsTitle}</h2>
@@ -214,6 +172,59 @@ function AboutPage() {
           )}
         </div>
       </section>
+
+      {books.length > 0 && (
+        <section className="border-y border-border">
+          <div className="container-page py-16 md:py-20">
+            <div className="flex items-end justify-between mb-10 flex-wrap gap-4">
+              <h2 className="font-serif text-3xl md:text-4xl">Συγγραφικό Έργο</h2>
+              {booksCtaText && booksCtaUrl && (
+                <Link to={booksCtaUrl} className="text-primary text-xs tracking-[0.2em] uppercase font-medium inline-flex items-center gap-2 hover:gap-3 transition-all">
+                  {booksCtaText} <ArrowRight className="size-4" />
+                </Link>
+              )}
+            </div>
+            <div className="relative">
+              <div
+                id="books-carousel"
+                className="flex gap-6 overflow-x-auto snap-x snap-mandatory scroll-smooth pb-4 -mx-4 px-4"
+                style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
+              >
+                {books.map((b, i) => (
+                  <div key={i} className="snap-start shrink-0 w-[180px] md:w-[220px] group">
+                    <div className="aspect-[3/4] rounded-2xl overflow-hidden bg-gradient-to-br from-primary/20 to-secondary mb-4">
+                      {b.cover_image ? (
+                        <img src={b.cover_image} alt={b.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+                      ) : (
+                        <div className="w-full h-full flex items-center justify-center p-6">
+                          <BookOpen className="size-8 text-primary/40 mx-auto mb-2" strokeWidth={1} />
+                          <p className="text-xs text-muted-foreground text-center line-clamp-2">{b.title}</p>
+                        </div>
+                      )}
+                    </div>
+                    <h3 className="font-medium text-sm text-foreground leading-snug">{b.title}</h3>
+                    {b.subtitle && <p className="text-xs text-muted-foreground mt-1">{b.subtitle}</p>}
+                  </div>
+                ))}
+              </div>
+              <button
+                onClick={() => { const el = document.getElementById('books-carousel'); if (el) el.scrollBy({ left: -240, behavior: 'smooth' }); }}
+                className="absolute left-0 top-1/3 -translate-y-1/2 -translate-x-4 size-10 rounded-full bg-background/90 backdrop-blur border border-border shadow-lg flex items-center justify-center text-foreground hover:bg-background transition-colors hidden md:flex"
+                aria-label="Previous"
+              >
+                <ChevronLeft className="size-5" />
+              </button>
+              <button
+                onClick={() => { const el = document.getElementById('books-carousel'); if (el) el.scrollBy({ left: 240, behavior: 'smooth' }); }}
+                className="absolute right-0 top-1/3 -translate-y-1/2 translate-x-4 size-10 rounded-full bg-background/90 backdrop-blur border border-border shadow-lg flex items-center justify-center text-foreground hover:bg-background transition-colors hidden md:flex"
+                aria-label="Next"
+              >
+                <ChevronRight className="size-5" />
+              </button>
+            </div>
+          </div>
+        </section>
+      )}
 
       <div className="py-8" />
 
