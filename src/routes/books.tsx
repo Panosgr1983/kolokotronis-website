@@ -79,11 +79,9 @@ function BooksPage() {
                       <span className="text-foreground/60">Εκδόσεις:</span> {b.publisher}
                     </p>
                   )}
-                  {b.year && (
-                    <p className="text-xs text-muted-foreground">
-                      <span className="text-foreground/60">Έτος:</span> {b.year}
-                    </p>
-                  )}
+                  <p className="text-xs text-muted-foreground">
+                    <span className="text-foreground/60">Έτος:</span> {b.year || "Προσωρινά μη διαθέσιμο"}
+                  </p>
                   {b.isbn && (
                     <p className="text-xs text-muted-foreground">
                       <span className="text-foreground/60">ISBN:</span> {b.isbn}
