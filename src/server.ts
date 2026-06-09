@@ -145,31 +145,22 @@ async function handleApiContact(_request: Request): Promise<Response> {
     console.error("Error reading contact_email setting:", e);
   }
 
-  const resendKey = cfEnv.RESEND_API_KEY as string | undefined;
-
-  if (recipientEmail && resendKey) {
-    fetch("https://api.resend.com/emails", {
+  // Forward email via Supabase Edge Function (SMTP)
+  if (recipientEmail) {
+    fetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/send-contact-email`, {
       method: "POST",
       headers: {
-        Authorization: `Bearer ${resendKey}`,
         "Content-Type": "application/json",
+        Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_ANON_KEY}`,
       },
       body: JSON.stringify({
-        from: "Φόρμα Επικοινωνίας <onboarding@resend.dev>",
-        to: [recipientEmail],
-        subject: `Νέο μήνυμα από ${name}`,
-        html: [
-          "<h2>Νέο μήνυμα από τη φόρμα επικοινωνίας</h2>",
-          `<p><strong>Όνομα:</strong> ${name}</p>`,
-          `<p><strong>Email:</strong> ${email}</p>`,
-          `<p><strong>Τηλέφωνο:</strong> ${phone || "—"}</p>`,
-          "<hr />",
-          "<p><strong>Μήνυμα:</strong></p>",
-          `<p>${message}</p>`,
-        ].join(""),
-        reply_to: email,
+        type: "new",
+        name,
+        email,
+        phone: phone || "",
+        message,
       }),
-    }).catch((emailError: unknown) => console.error("Email send error:", emailError));
+    }).catch((emailError: unknown) => console.error("Email forward error:", emailError));
   }
 
   return jsonResponse({ success: true });
