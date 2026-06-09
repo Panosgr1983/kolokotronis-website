@@ -145,16 +145,21 @@ async function handleApiContact(_request: Request): Promise<Response> {
     console.error("Error reading contact_email setting:", e);
   }
 
-  // Forward email via Supabase Edge Function (SMTP) — fire & forget
+  // Forward email via Supabase Edge Function (SMTP)
   const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
   const anonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
 
   if (recipientEmail && supabaseUrl && anonKey) {
-    fetch(`${supabaseUrl}/functions/v1/send-contact-email`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json", Authorization: `Bearer ${anonKey}` },
-      body: JSON.stringify({ type: "new", name, email, phone: phone || "", message }),
-    }).catch((emailError: unknown) => console.error("Email forward error:", String(emailError)));
+    try {
+      const efRes = await fetch(`${supabaseUrl}/functions/v1/send-contact-email`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json", Authorization: `Bearer ${anonKey}` },
+        body: JSON.stringify({ type: "new", name, email, phone: phone || "", message }),
+      });
+      if (!efRes.ok) console.error("Email forward failed:", await efRes.text());
+    } catch (emailError: unknown) {
+      console.error("Email forward error:", String(emailError));
+    }
   }
 
   return jsonResponse({ success: true });
