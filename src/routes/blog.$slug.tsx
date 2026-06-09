@@ -114,7 +114,7 @@ function BlogPostPage() {
     <PageShell>
       <article>
         <div
-          className="relative h-[60vh] md:h-[70vh] min-h-[400px] bg-fixed bg-top bg-cover"
+          className="relative aspect-[2.35/1] min-h-[300px] bg-fixed bg-top bg-cover"
           style={post.image_url ? { backgroundImage: `url(${post.image_url})` } : undefined}
         >
           <div className="absolute inset-0 bg-gradient-to-t from-background via-background/40 to-transparent" />
