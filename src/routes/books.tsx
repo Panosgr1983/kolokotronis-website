@@ -12,19 +12,20 @@ function BooksPage() {
   const booksPage = usePageData()["/books"] || {};
   const heroTitle = (useSiteSetting("books_hero_title") as string) || booksPage.title || "Συγγραφικό Έργο";
   const heroSubtitle = (useSiteSetting("books_hero_subtitle") as string) || booksPage.subtitle || "Τα βιβλία & οι εκδόσεις μου";
+  const pageVisibility = (useSiteSetting("page_visibility") as Record<string, boolean>) || {};
 
   const aboutBooks = useSiteSetting("about_books");
   const books = Array.isArray(aboutBooks)
     ? [...aboutBooks].sort((a: any, b: any) => a.sort_order - b.sort_order)
     : [];
 
-  if (books.length === 0) {
+  if (pageVisibility['/books'] === false || books.length === 0) {
     return (
       <PageShell>
         <PageHero title={heroTitle} subtitle={heroSubtitle} backgroundImage={booksPage.hero_image} />
         <section className="container-page py-20 text-center">
           <BookOpen className="size-16 text-muted-foreground/30 mx-auto mb-4" strokeWidth={1} />
-          <p className="text-muted-foreground">Τα βιβλία θα προστεθούν σύντομα.</p>
+          <p className="text-muted-foreground">{pageVisibility['/books'] === false ? 'Η σελίδα αυτή δεν είναι διαθέσιμη.' : 'Τα βιβλία θα προστεθούν σύντομα.'}</p>
         </section>
         <CtaBand />
       </PageShell>

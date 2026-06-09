@@ -20,6 +20,7 @@ export function SiteHeader() {
     { label: "Σχετικα με εμενα", path: "/about" },
     { label: "Υπηρεσιες", path: "/services" },
     { label: "Αρθρα", path: "/blog" },
+    { label: "Βιβλια", path: "/books" },
     { label: "Επικοινωνια", path: "/contact" },
   ]).filter(n => pageVisibility[n.path] !== false);
 

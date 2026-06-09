@@ -33,6 +33,7 @@ function ContactPage() {
   const mapEmbedUrl = (useSiteSetting("contact_map_embed_url") as string) || "https://www.google.com/maps?q=Απόλλωνος+30,+Νέο+Ηράκλειο,+Αθήνα&output=embed";
 
   const formHeading = (useSiteSetting("contact_form_heading") as string) || "Θα σας απαντήσω εντός 24 ωρών.";
+  const contactEmail = (useSiteSetting("contact_email") as string) || "";
 
   return (
     <PageShell>
@@ -94,7 +95,7 @@ function ContactPage() {
 
         <div className="card-soft p-8 md:p-10">
           <p className="text-sm text-muted-foreground mb-6">{formHeading}</p>
-          <ContactForm />
+          <ContactForm contactEmail={contactEmail} />
         </div>
       </section>
 

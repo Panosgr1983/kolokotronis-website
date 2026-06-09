@@ -23,12 +23,13 @@ function SectionTitle({ children }: { children: React.ReactNode }) {
 function BooksShowcase() {
   const aboutBooks = useSiteSetting("about_books");
   const enabled = useSiteSetting("home_books_showcase_enabled");
+  const pageVisibility = (useSiteSetting("page_visibility") as Record<string, boolean>) || {};
   const showcaseTitle = (useSiteSetting("home_books_showcase_title") as string) || "Συγγραφικό Έργο";
   const linkText = (useSiteSetting("home_books_showcase_link_text") as string) || "Δείτε όλα τα βιβλία";
   const linkUrl = (useSiteSetting("home_books_showcase_link_url") as string) || "/books";
   const books = Array.isArray(aboutBooks) ? [...aboutBooks].sort((a: any, b: any) => a.sort_order - b.sort_order).slice(0, 4) : [];
 
-  if (!enabled || books.length === 0) return null;
+  if (!enabled || pageVisibility['/books'] === false || books.length === 0) return null;
 
   return (
     <section className="bg-secondary/30 border-y border-border">

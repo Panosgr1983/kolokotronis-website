@@ -25,6 +25,13 @@ function brandedErrorResponse(): Response {
   });
 }
 
+function jsonResponse(data: unknown, status = 200): Response {
+  return new Response(JSON.stringify(data), {
+    status,
+    headers: { "content-type": "application/json" },
+  });
+}
+
 function isCatastrophicSsrErrorBody(body: string, responseStatus: number): boolean {
   let payload: unknown;
   try {
@@ -50,8 +57,6 @@ function isCatastrophicSsrErrorBody(body: string, responseStatus: number): boole
   );
 }
 
-// h3 swallows in-handler throws into a normal 500 Response with body
-// {"unhandled":true,"message":"HTTPError"} — try/catch alone never fires for those.
 async function normalizeCatastrophicSsrResponse(response: Response): Promise<Response> {
   if (response.status < 500) return response;
   const contentType = response.headers.get("content-type") ?? "";
@@ -66,11 +71,121 @@ async function normalizeCatastrophicSsrResponse(response: Response): Promise<Res
   return brandedErrorResponse();
 }
 
+function supabaseAnonFetch(path: string, options: RequestInit = {}): Promise<Response> {
+  const url = `${import.meta.env.VITE_SUPABASE_URL}/rest/v1/${path}`;
+  return fetch(url, {
+    ...options,
+    headers: {
+      apikey: import.meta.env.VITE_SUPABASE_ANON_KEY,
+      Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_ANON_KEY}`,
+      "Content-Type": "application/json",
+      ...options.headers,
+    },
+  });
+}
+
+function getCloudflareEnv(): Record<string, unknown> {
+  return (globalThis as Record<string, unknown>).__env__ as Record<string, unknown> || {};
+}
+
+function supabaseServiceFetch(path: string, options: RequestInit = {}): Promise<Response> {
+  const cfEnv = getCloudflareEnv();
+  const serviceKey = cfEnv.SUPABASE_SERVICE_KEY as string | undefined;
+  if (!serviceKey) return supabaseAnonFetch(path, options);
+  const url = `${import.meta.env.VITE_SUPABASE_URL}/rest/v1/${path}`;
+  return fetch(url, {
+    ...options,
+    headers: {
+      apikey: serviceKey,
+      Authorization: `Bearer ${serviceKey}`,
+      "Content-Type": "application/json",
+      ...options.headers,
+    },
+  });
+}
+
+async function handleApiContact(_request: Request): Promise<Response> {
+  if (_request.method !== "POST") {
+    return jsonResponse({ error: "Method not allowed" }, 405);
+  }
+
+  let body: { name?: string; email?: string; phone?: string; message?: string };
+  try {
+    body = await _request.json();
+  } catch {
+    return jsonResponse({ error: "Invalid JSON" }, 400);
+  }
+
+  const { name, email, phone, message } = body;
+  if (!name || !email || !message) {
+    return jsonResponse({ error: "Missing required fields" }, 400);
+  }
+
+  const insertRes = await supabaseAnonFetch("contact_submissions", {
+    method: "POST",
+    body: JSON.stringify({ name, email, phone: phone || "", message }),
+  });
+
+  if (!insertRes.ok) {
+    const text = await insertRes.text();
+    return jsonResponse({ error: "Failed to save message" }, 500);
+  }
+
+  const cfEnv = getCloudflareEnv();
+  const serviceKey = cfEnv.SUPABASE_SERVICE_KEY as string | undefined;
+
+  let recipientEmail: string | undefined;
+  try {
+    const settingsRes = await (serviceKey ? supabaseServiceFetch : supabaseAnonFetch)(
+      "site_settings?select=value&key=eq.contact_email",
+    );
+    const settingsData: { value: string }[] = settingsRes.ok ? await settingsRes.json() : [];
+    recipientEmail = settingsData?.[0]?.value;
+  } catch (e) {
+    console.error("Error reading contact_email setting:", e);
+  }
+
+  const resendKey = cfEnv.RESEND_API_KEY as string | undefined;
+
+  if (recipientEmail && resendKey) {
+    fetch("https://api.resend.com/emails", {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${resendKey}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        from: "Φόρμα Επικοινωνίας <onboarding@resend.dev>",
+        to: [recipientEmail],
+        subject: `Νέο μήνυμα από ${name}`,
+        html: [
+          "<h2>Νέο μήνυμα από τη φόρμα επικοινωνίας</h2>",
+          `<p><strong>Όνομα:</strong> ${name}</p>`,
+          `<p><strong>Email:</strong> ${email}</p>`,
+          `<p><strong>Τηλέφωνο:</strong> ${phone || "—"}</p>`,
+          "<hr />",
+          "<p><strong>Μήνυμα:</strong></p>",
+          `<p>${message}</p>`,
+        ].join(""),
+        reply_to: email,
+      }),
+    }).catch((emailError: unknown) => console.error("Email send error:", emailError));
+  }
+
+  return jsonResponse({ success: true });
+}
+
 export default {
-  async fetch(request: Request, env: unknown, ctx: unknown) {
+  async fetch(request: Request) {
     try {
+      const url = new URL(request.url);
+
+      if (url.pathname === "/api/contact") {
+        return await handleApiContact(request);
+      }
+
       const handler = await getServerEntry();
-      const response = await handler.fetch(request, env, ctx);
+      const response = await handler.fetch(request);
       return await normalizeCatastrophicSsrResponse(response);
     } catch (error) {
       console.error(error);

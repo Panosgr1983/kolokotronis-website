@@ -37,6 +37,7 @@ function AboutPage() {
   const aboutAchievements = useSiteSetting("about_achievements");
   const achievements = Array.isArray(aboutAchievements) ? aboutAchievements : [];
 
+  const pageVisibility = (useSiteSetting("page_visibility") as Record<string, boolean>) || {};
   const aboutBooks = useSiteSetting("about_books");
   const books = Array.isArray(aboutBooks) ? aboutBooks.filter((b: any) => b.featured).sort((a: any, b: any) => a.sort_order - b.sort_order) : [];
   const booksCtaText = (useSiteSetting("about_books_cta_text") as string) || "Δείτε όλα τα βιβλία";
@@ -169,7 +170,7 @@ function AboutPage() {
         </div>
       </section>
 
-      {books.length > 0 && (
+      {books.length > 0 && pageVisibility['/books'] !== false && (
         <section className="border-y border-border">
           <div className="container-page py-16 md:py-20">
             <div className="flex items-end justify-between mb-10 flex-wrap gap-4">

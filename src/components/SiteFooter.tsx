@@ -22,6 +22,7 @@ export function SiteFooter() {
     { label: "Σχετικά με εμένα", path: "/about" },
     { label: "Υπηρεσίες", path: "/services" },
     { label: "Άρθρα", path: "/blog" },
+    { label: "Βιβλία", path: "/books" },
     { label: "Επικοινωνία", path: "/contact" },
   ]).filter(n => pageVisibility[n.path] !== false);
 

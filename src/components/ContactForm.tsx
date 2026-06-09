@@ -12,7 +12,7 @@ const schema = z.object({
 
 type FormData = z.infer<typeof schema>;
 
-export function ContactForm({ compact = false }: { compact?: boolean }) {
+export function ContactForm({ compact = false, contactEmail }: { compact?: boolean; contactEmail?: string }) {
   const [errors, setErrors] = useState<Partial<Record<keyof FormData, string>>>({});
   const [submitting, setSubmitting] = useState(false);
 
@@ -32,11 +32,23 @@ export function ContactForm({ compact = false }: { compact?: boolean }) {
     }
     setErrors({});
     setSubmitting(true);
-    // Placeholder: real email sending requires backend (Lovable Cloud + Resend).
-    await new Promise((r) => setTimeout(r, 600));
-    setSubmitting(false);
-    toast.success("Το μήνυμά σας στάλθηκε. Θα επικοινωνήσω σύντομα.");
-    e.currentTarget.reset();
+
+    try {
+      const res = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(result.data),
+      });
+
+      if (!res.ok) throw new Error(await res.text());
+
+      toast.success("Το μήνυμά σας στάλθηκε. Θα επικοινωνήσω σύντομα.");
+      e.currentTarget.reset();
+    } catch {
+      toast.error("Δεν ήταν δυνατή η αποστολή. Δοκιμάστε ξανά ή στείλτε email.");
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   const inputCls =
@@ -45,7 +57,14 @@ export function ContactForm({ compact = false }: { compact?: boolean }) {
   return (
     <form onSubmit={onSubmit} className="space-y-4" noValidate>
       {!compact && (
-        <h3 className="font-serif text-2xl mb-2">Στείλτε μου μήνυμα</h3>
+        <>
+          <h3 className="font-serif text-2xl mb-2">Στείλτε μου μήνυμα</h3>
+          {contactEmail && (
+            <p className="text-xs text-muted-foreground mb-4">
+              Το μήνυμά σας θα σταλεί στο <span className="text-foreground">{contactEmail}</span>
+            </p>
+          )}
+        </>
       )}
       <div>
         <input name="name" placeholder="Ονοματεπώνυμο" className={inputCls} maxLength={100} />
