@@ -39,7 +39,7 @@ function ServiceDetailPage() {
   return (
     <PageShell>
       <div
-        className="relative h-[40vh] md:h-[50vh] min-h-[320px] bg-fixed bg-center bg-cover"
+        className="relative h-[60vh] md:h-[70vh] min-h-[400px] bg-fixed bg-center bg-contain bg-no-repeat bg-secondary/20"
         style={(service.image_url || svcPageData.hero_image) ? { backgroundImage: `url(${service.image_url || svcPageData.hero_image})` } : undefined}
       >
         <div className="absolute inset-0 bg-gradient-to-t from-background via-background/40 to-transparent" />

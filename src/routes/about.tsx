@@ -58,7 +58,7 @@ function AboutPage() {
     <PageShell>
       {heroImage ? (
         <section
-          className="relative h-[60vh] min-h-[420px] bg-fixed bg-center bg-cover"
+          className="relative h-[70vh] min-h-[500px] bg-fixed bg-center bg-contain bg-no-repeat bg-secondary/20"
           style={{ backgroundImage: `url(${heroImage})` }}
         >
           <div className="absolute inset-0 bg-gradient-to-t from-background via-background/50 to-background/20" />
