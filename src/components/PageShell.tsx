@@ -15,7 +15,7 @@ export function PageShell({ children }: { children: ReactNode }) {
 export function PageHero({ eyebrow, title, subtitle, backgroundImage }: { eyebrow?: string; title: string; subtitle?: string; backgroundImage?: string }) {
   if (backgroundImage) {
     return (
-      <section className="relative h-[60vh] md:h-[70vh] min-h-[400px] bg-fixed bg-center bg-contain bg-no-repeat bg-secondary/20" style={{ backgroundImage: `url(${backgroundImage})` }}>
+      <section className="relative h-[60vh] md:h-[70vh] min-h-[400px] bg-fixed bg-top bg-cover" style={{ backgroundImage: `url(${backgroundImage})` }}>
         <div className="absolute inset-0 bg-gradient-to-t from-background via-background/50 to-background/20" />
         <div className="absolute inset-0 bg-black/40" />
         <div className="absolute bottom-0 left-0 right-0 container-page pb-12 md:pb-16">
