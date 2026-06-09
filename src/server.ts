@@ -145,38 +145,16 @@ async function handleApiContact(_request: Request): Promise<Response> {
     console.error("Error reading contact_email setting:", e);
   }
 
-  // Forward email via Supabase Edge Function (SMTP)
+  // Forward email via Supabase Edge Function (SMTP) — fire & forget
   const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
   const anonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
-  console.log("SMTP forward: URL=" + supabaseUrl + " anonKey=" + (anonKey ? "present" : "missing") + " recipient=" + recipientEmail);
 
   if (recipientEmail && supabaseUrl && anonKey) {
-    try {
-      const efRes = await fetch(`${supabaseUrl}/functions/v1/send-contact-email`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${anonKey}`,
-        },
-        body: JSON.stringify({
-          type: "new",
-          name,
-          email,
-          phone: phone || "",
-          message,
-        }),
-      });
-      const efBody = await efRes.text();
-      if (!efRes.ok) {
-        console.error("Email forward failed:", efRes.status, efBody);
-      } else {
-        console.log("Email forwarded successfully:", efBody);
-      }
-    } catch (emailError: unknown) {
-      console.error("Email forward error:", String(emailError));
-    }
-  } else {
-    console.log("SMTP forward skipped - missing config");
+    fetch(`${supabaseUrl}/functions/v1/send-contact-email`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json", Authorization: `Bearer ${anonKey}` },
+      body: JSON.stringify({ type: "new", name, email, phone: phone || "", message }),
+    }).catch((emailError: unknown) => console.error("Email forward error:", String(emailError)));
   }
 
   return jsonResponse({ success: true });
