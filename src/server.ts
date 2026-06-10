@@ -131,6 +131,21 @@ async function handleApiContact(_request: Request): Promise<Response> {
     return jsonResponse({ error: "Failed to save message" }, 500);
   }
 
+  // Track usage events
+  const svcKey = getCloudflareEnv().SUPABASE_SERVICE_KEY as string | undefined;
+  if (svcKey) {
+    const tenantId = '00000000-0000-0000-0000-000000000001';
+    const baseUrl = import.meta.env.VITE_SUPABASE_URL;
+    fetch(`${baseUrl}/rest/v1/usage_events`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json", apikey: svcKey, Authorization: `Bearer ${svcKey}` },
+      body: JSON.stringify([
+        { tenant_id: tenantId, event_name: "crm.lead_created", event_version: 1, metadata: { source: "contact_form" }, source: "public_site" },
+        { tenant_id: tenantId, event_name: "crm.message_received", event_version: 1, metadata: { channel: "form" }, source: "public_site" },
+      ]),
+    }).catch((e: unknown) => console.error("Usage event error:", String(e)));
+  }
+
   const cfEnv = getCloudflareEnv();
   const serviceKey = cfEnv.SUPABASE_SERVICE_KEY as string | undefined;
 
