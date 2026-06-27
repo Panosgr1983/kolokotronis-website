@@ -1,5 +1,5 @@
 import { Link } from "@tanstack/react-router";
-import { Phone, MapPin, Facebook } from "lucide-react";
+import { Phone, MapPin, Mail, Facebook } from "lucide-react";
 import { useSiteSetting } from "@/lib/content-hooks";
 
 interface NavLink { label: string; path: string; }
@@ -13,6 +13,8 @@ export function SiteFooter() {
   const footerNavLinks = (useSiteSetting("footer_nav_links") as NavLink[]) || [];
   const pageVisibility = (useSiteSetting("page_visibility") as Record<string, boolean>) || {};
   const facebookUrl = (useSiteSetting("contact_social_facebook_url") as string) || "https://www.facebook.com/nikolas.kolokotronis/";
+  const email = (useSiteSetting("contact_email") as string) || "";
+  const emailLabel = (useSiteSetting("contact_email_label") as string) || "Email";
   const phone = (useSiteSetting("contact_phone_hint") as string) || "+30 697 437 1139";
   const addressLabel = (useSiteSetting("contact_address_label") as string) || "Απόλλωνος 30, ισόγειο";
   const addressHint = (useSiteSetting("contact_address_hint") as string) || "Νέο Ηράκλειο, Αθήνα";
@@ -71,6 +73,12 @@ export function SiteFooter() {
         <div>
           <h4 className="text-xs tracking-[0.2em] uppercase mb-4 text-footer-foreground/60">Επικοινωνια</h4>
           <ul className="space-y-3 text-sm text-footer-foreground/80">
+            {email && (
+              <li className="flex gap-3">
+                <Mail className="size-4 mt-0.5 shrink-0" />
+                <a href={`mailto:${email}`} className="hover:text-footer-foreground">{email}</a>
+              </li>
+            )}
             <li className="flex gap-3">
               <MapPin className="size-4 mt-0.5 shrink-0" />
               <span>{addressLabel}<br />{addressHint}</span>
