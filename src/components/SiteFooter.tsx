@@ -8,6 +8,7 @@ export function SiteFooter() {
   const siteName = (useSiteSetting("site_name") as string) || "Νικολας Κολοκοτρωνης";
   const subtitle = (useSiteSetting("site_subtitle") as string) || "Ψυχολογος";
   const monogram = (useSiteSetting("site_monogram") as string) || "ΝΚ";
+  const logoUrl = (useSiteSetting("site_logo") as string) || "";
   const tagline = (useSiteSetting("site_tagline") as string) || "Ένας ασφαλής χώρος για αυτογνωσία, ισορροπία και αλλαγή.";
   const copyright = (useSiteSetting("footer_copyright") as string) || "Νικόλας Κολοκοτρώνης — Ψυχολόγος · Νέο Ηράκλειο";
   const footerNavLinks = (useSiteSetting("footer_nav_links") as NavLink[]) || [];
@@ -33,9 +34,13 @@ export function SiteFooter() {
       <div className="container-page py-14 grid gap-10 md:grid-cols-4">
         <div className="md:col-span-2">
           <div className="flex items-center gap-3 mb-4">
-            <span className="inline-flex items-center justify-center size-12 border border-footer-foreground/40 font-serif text-lg tracking-wider">
-              {monogram}
-            </span>
+            {logoUrl ? (
+              <img src={logoUrl} alt={siteName} className="size-12 object-contain shrink-0" />
+            ) : (
+              <span className="inline-flex items-center justify-center size-12 border border-footer-foreground/40 font-serif text-lg tracking-wider">
+                {monogram}
+              </span>
+            )}
             <span className="flex flex-col leading-tight">
               <span className="font-serif text-base tracking-[0.18em] uppercase">{siteName}</span>
               <span className="text-xs tracking-widest uppercase text-footer-foreground/60">{subtitle}</span>

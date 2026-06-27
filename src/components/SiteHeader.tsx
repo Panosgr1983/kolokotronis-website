@@ -10,6 +10,7 @@ export function SiteHeader() {
   const siteName = (useSiteSetting("site_name") as string) || "Νικολας Κολοκοτρωνης";
   const subtitle = (useSiteSetting("site_subtitle") as string) || "Ψυχολογος";
   const monogram = (useSiteSetting("site_monogram") as string) || "ΝΚ";
+  const logoUrl = (useSiteSetting("site_logo") as string) || "";
   const navLinks = (useSiteSetting("nav_links") as NavLink[]) || [];
   const pageVisibility = (useSiteSetting("page_visibility") as Record<string, boolean>) || {};
   const ctaText = (useSiteSetting("header_cta_text") as string) || "Κλειστε ραντεβου";
@@ -28,9 +29,13 @@ export function SiteHeader() {
     <header className="sticky top-0 z-50 bg-background/90 backdrop-blur-md border-b border-border">
       <div className="container-page flex items-center justify-between h-20 py-4">
         <Link to="/" className="flex items-center gap-3" onClick={() => setOpen(false)}>
-          <span className="inline-flex items-center justify-center size-12 border border-foreground/30 font-serif text-lg tracking-wider text-foreground shrink-0">
-            {monogram}
-          </span>
+          {logoUrl ? (
+            <img src={logoUrl} alt={siteName} className="size-12 object-contain shrink-0" />
+          ) : (
+            <span className="inline-flex items-center justify-center size-12 border border-foreground/30 font-serif text-lg tracking-wider text-foreground shrink-0">
+              {monogram}
+            </span>
+          )}
           <span className="flex flex-col leading-tight">
             <span className="font-serif text-base md:text-lg tracking-[0.18em] uppercase text-foreground">
               {siteName}
