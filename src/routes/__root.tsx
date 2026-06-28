@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import {
   Outlet,
@@ -106,6 +107,8 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { name: "twitter:description", content: "Ένας ασφαλής χώρος για αυτογνωσία, ισορροπία και αλλαγή." },
     ],
     links: [
+      { rel: "icon", href: "/logo.png" },
+      { rel: "shortcut icon", href: "/logo.png" },
       {
         rel: "stylesheet",
         href: appCss,
@@ -135,6 +138,16 @@ function RootShell({ children }: { children: React.ReactNode }) {
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
   usePageviewTracking();
+
+  const settings = queryClient.getQueryData(["site_settings"]) as Record<string, unknown> | undefined;
+  const favicon = (settings?.site_favicon as string) || "/logo.png";
+
+  useEffect(() => {
+    const link = document.querySelector("link[rel*='icon']") || document.createElement("link");
+    link.setAttribute("rel", "icon");
+    link.setAttribute("href", favicon);
+    document.head.appendChild(link);
+  }, [favicon]);
 
   return (
     <QueryClientProvider client={queryClient}>

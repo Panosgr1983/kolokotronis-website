@@ -8,7 +8,7 @@ export function SiteFooter() {
   const siteName = (useSiteSetting("site_name") as string) || "Νικολας Κολοκοτρωνης";
   const subtitle = (useSiteSetting("site_subtitle") as string) || "Ψυχολογος";
   const monogram = (useSiteSetting("site_monogram") as string) || "ΝΚ";
-  const logoUrl = (useSiteSetting("site_logo") as string) || "";
+  const logoUrl = (useSiteSetting("site_logo_footer") as string) || (useSiteSetting("site_logo") as string) || "";
   const tagline = (useSiteSetting("site_tagline") as string) || "Ένας ασφαλής χώρος για αυτογνωσία, ισορροπία και αλλαγή.";
   const copyright = (useSiteSetting("footer_copyright") as string) || "Νικόλας Κολοκοτρώνης — Ψυχολόγος · Νέο Ηράκλειο";
   const footerNavLinks = (useSiteSetting("footer_nav_links") as NavLink[]) || [];
