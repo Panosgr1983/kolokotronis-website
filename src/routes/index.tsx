@@ -189,16 +189,16 @@ function HomePage() {
           <div className="mt-16 flex justify-center"><div className="size-8 border-2 border-primary/30 border-t-primary rounded-full animate-spin" /></div>
         ) : (
           <div className="mt-16 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-10 md:gap-8">
-            {services.map((s) => {
+              {services.map((s) => {
               const Icon = getIcon(s.icon);
               return (
-                <article key={s.id} className="text-center px-2">
-                  <div className="size-14 mx-auto mb-5 text-primary flex items-center justify-center">
+                <Link key={s.id} to="/services/$slug" params={{ slug: s.slug }} className="block text-center px-2 group">
+                  <div className="size-14 mx-auto mb-5 text-primary group-hover:text-primary/80 transition-colors flex items-center justify-center">
                     <Icon className="size-9" strokeWidth={1.25} />
                   </div>
-                  <h3 className="font-serif text-lg md:text-xl mb-3 text-foreground">{s.title}</h3>
+                  <h3 className="font-serif text-lg md:text-xl mb-3 text-foreground group-hover:text-primary transition-colors">{s.title}</h3>
                   <p className="text-sm text-muted-foreground leading-relaxed line-clamp-1">{s.short_description}</p>
-                </article>
+                </Link>
               );
             })}
           </div>

@@ -35,10 +35,12 @@ export function SiteFooter() {
         <div className="md:col-span-2">
           <div className="flex items-center gap-3 mb-4">
             {logoUrl ? (
-              <img src={logoUrl} alt={siteName} className="size-12 object-contain shrink-0" />
+              <span className="inline-flex items-center justify-center size-12 border border-footer-foreground/40 shrink-0 overflow-hidden">
+                <img src={logoUrl} alt={siteName} className="size-full object-contain p-1" />
+              </span>
             ) : (
-              <span className="inline-flex items-center justify-center size-12 border border-footer-foreground/40 font-serif text-lg tracking-wider">
-                {monogram}
+              <span className="inline-flex items-center justify-center size-12 border border-footer-foreground/40 shrink-0 overflow-hidden">
+                <img src="/logo-white.png" alt={siteName} className="size-full object-contain p-1" />
               </span>
             )}
             <span className="flex flex-col leading-tight">

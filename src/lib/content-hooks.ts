@@ -3,6 +3,8 @@ import { supabase } from "./supabase";
 
 const TENANT_ID = "00000000-0000-0000-0000-000000000001";
 
+export { TENANT_ID };
+
 export function useServices() {
   return useQuery({
     queryKey: ["services"],

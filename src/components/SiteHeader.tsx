@@ -30,10 +30,12 @@ export function SiteHeader() {
       <div className="container-page flex items-center justify-between h-20 py-4">
         <Link to="/" className="flex items-center gap-3" onClick={() => setOpen(false)}>
           {logoUrl ? (
-            <img src={logoUrl} alt={siteName} className="size-12 object-contain shrink-0" />
+            <span className="inline-flex items-center justify-center size-12 border border-foreground/30 shrink-0 overflow-hidden">
+              <img src={logoUrl} alt={siteName} className="size-full object-contain p-1" />
+            </span>
           ) : (
-            <span className="inline-flex items-center justify-center size-12 border border-foreground/30 font-serif text-lg tracking-wider text-foreground shrink-0">
-              {monogram}
+            <span className="inline-flex items-center justify-center size-12 border border-foreground/30 shrink-0 overflow-hidden">
+              <img src="/logo.png" alt={siteName} className="size-full object-contain p-1" />
             </span>
           )}
           <span className="flex flex-col leading-tight">
