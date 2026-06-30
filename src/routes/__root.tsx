@@ -52,9 +52,6 @@ function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
         <p className="mt-2 text-sm text-muted-foreground">
           Δοκιμάστε να ανανεώσετε ή επιστρέψτε στην αρχική.
         </p>
-        <p className="mt-4 p-3 rounded border border-border text-xs text-muted-foreground break-all font-mono">
-          {error?.message || String(error)}
-        </p>
         <div className="mt-6 flex flex-wrap justify-center gap-2">
           <button
             onClick={() => {
