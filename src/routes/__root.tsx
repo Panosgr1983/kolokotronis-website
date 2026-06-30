@@ -40,7 +40,7 @@ function NotFoundComponent() {
 }
 
 function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
-  console.error(error);
+  console.error("ROUTE ERROR:", error);
   const router = useRouter();
 
   return (
@@ -51,6 +51,9 @@ function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
         </h1>
         <p className="mt-2 text-sm text-muted-foreground">
           Δοκιμάστε να ανανεώσετε ή επιστρέψτε στην αρχική.
+        </p>
+        <p className="mt-4 p-3 rounded border border-border text-xs text-muted-foreground break-all font-mono">
+          {error?.message || String(error)}
         </p>
         <div className="mt-6 flex flex-wrap justify-center gap-2">
           <button
