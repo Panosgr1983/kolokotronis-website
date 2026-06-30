@@ -155,13 +155,13 @@ function AboutPage() {
           {credsLoading ? (
             <div className="flex justify-center py-10"><div className="size-8 border-2 border-primary/30 border-t-primary rounded-full animate-spin" /></div>
           ) : (
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
               {credentials.map((c) => {
                 const Icon = getIcon(c.icon);
                 return (
-                  <div key={c.id} className="flex items-center gap-3 justify-center text-center md:text-left">
-                    <Icon className="size-5 text-primary shrink-0" strokeWidth={1.5} />
-                    <span className="text-sm font-medium text-foreground/80">{c.title}</span>
+                  <div key={c.id} className="flex items-start gap-3">
+                    <Icon className="size-5 text-primary shrink-0 mt-0.5" strokeWidth={1.5} />
+                    <span className="text-sm font-medium text-foreground/80 leading-snug">{c.title}</span>
                   </div>
                 );
               })}
