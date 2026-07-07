@@ -1,10 +1,12 @@
 import { Link } from "@tanstack/react-router";
 import { Phone, MapPin, Mail, Facebook, ExternalLink } from "lucide-react";
 import { useSiteSetting } from "@/lib/content-hooks";
+import { useBusinessInfo } from "@/lib/business-info";
 
 interface NavLink { label: string; path: string; }
 
 export function SiteFooter() {
+  const biz = useBusinessInfo();
   const siteName = (useSiteSetting("site_name") as string) || "Νικολας Κολοκοτρωνης";
   const subtitle = (useSiteSetting("site_subtitle") as string) || "Ψυχολογος";
   const monogram = (useSiteSetting("site_monogram") as string) || "ΝΚ";
@@ -13,17 +15,10 @@ export function SiteFooter() {
   const copyright = (useSiteSetting("footer_copyright") as string) || "Νικόλας Κολοκοτρώνης — Ψυχολόγος · Νέο Ηράκλειο";
   const footerNavLinks = (useSiteSetting("footer_nav_links") as NavLink[]) || [];
   const pageVisibility = (useSiteSetting("page_visibility") as Record<string, boolean>) || {};
-  const facebookUrl = (useSiteSetting("contact_social_facebook_url") as string) || "https://www.facebook.com/nikolas.kolokotronis/";
-  const email = (useSiteSetting("contact_email") as string) || "";
   const emailLabel = (useSiteSetting("contact_email_label") as string) || "Email";
-  const phone = (useSiteSetting("contact_phone_hint") as string) || "+30 697 437 1139";
-  const addressLabel = (useSiteSetting("contact_address_label") as string) || "Απόλλωνος 30, ισόγειο";
-  const addressHint = (useSiteSetting("contact_address_hint") as string) || "Νέο Ηράκλειο, Αθήνα 14121";
 
   const footerNavHeading = (useSiteSetting("footer_heading_nav") as string) || "Πλοήγηση";
   const footerContactHeading = (useSiteSetting("footer_heading_contact") as string) || "Επικοινωνία";
-  const addressArea = (useSiteSetting("contact_address_area") as string) || "Νέο Ηράκλειο";
-  const addressPostalCode = (useSiteSetting("contact_address_postal_code") as string) || "14121";
   const openMapsText = (useSiteSetting("contact_open_maps_text") as string) || "Άνοιγμα στους Χάρτες";
   const privacyText = (useSiteSetting("footer_privacy_text") as string) || "Πολιτική Απορρήτου";
   const termsText = (useSiteSetting("footer_terms_text") as string) || "Όροι Χρήσης";
@@ -60,9 +55,9 @@ export function SiteFooter() {
           <p className="text-sm text-footer-foreground/70 max-w-sm leading-relaxed">
             {tagline}
           </p>
-          {facebookUrl && (
+          {biz.social.facebook && (
             <a
-              href={facebookUrl}
+              href={biz.social.facebook}
               target="_blank"
               rel="noopener noreferrer"
               className="mt-5 inline-flex items-center justify-center size-9 rounded-full border border-footer-foreground/30 text-footer-foreground/80 hover:text-footer-foreground hover:border-footer-foreground/60 transition-colors"
@@ -89,20 +84,20 @@ export function SiteFooter() {
         <div>
           <h4 className="text-xs tracking-[0.2em] uppercase mb-4 text-footer-foreground/60">{footerContactHeading}</h4>
           <ul className="space-y-3 text-sm text-footer-foreground/80">
-            {email && (
+            {biz.contact.email && (
               <li className="flex gap-3">
                 <Mail className="size-4 mt-0.5 shrink-0" />
-                <a href={`mailto:${email}`} className="hover:text-footer-foreground">{email}</a>
+                <a href={`mailto:${biz.contact.email}`} className="hover:text-footer-foreground">{biz.contact.email}</a>
               </li>
             )}
             <li className="flex gap-3">
               <MapPin className="size-4 mt-0.5 shrink-0" />
               <span className="space-y-0.5">
-                <p className="text-footer-foreground/80"><span className="text-footer-foreground/60 text-xs">Οδός:</span> {addressLabel}</p>
-                <p className="text-footer-foreground/80"><span className="text-footer-foreground/60 text-xs">Περιοχή:</span> {addressArea}</p>
-                <p className="text-footer-foreground/80"><span className="text-footer-foreground/60 text-xs">Τ.Κ.:</span> {addressPostalCode}</p>
+                <p className="text-footer-foreground/80"><span className="text-footer-foreground/60 text-xs">Οδός:</span> {biz.address.street} {biz.address.number}{biz.address.floor ? `, ${biz.address.floor}` : ""}</p>
+                <p className="text-footer-foreground/80"><span className="text-footer-foreground/60 text-xs">Περιοχή:</span> {biz.address.area}</p>
+                <p className="text-footer-foreground/80"><span className="text-footer-foreground/60 text-xs">Τ.Κ.:</span> {biz.address.postal_code}</p>
                 <a
-                  href="https://www.google.com/maps/dir/?api=1&destination=%CE%91%CF%80%CF%8C%CE%BB%CE%BB%CF%89%CE%BD%CE%BF%CF%82+30+%CE%9D%CE%AD%CE%BF+%CE%97%CF%81%CE%AC%CE%BA%CE%BB%CE%B5%CE%B9%CE%BF+%CE%91%CE%B8%CE%AE%CE%BD%CE%B1+14121"
+                  href={biz.maps.url}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="inline-flex items-center gap-1.5 text-xs text-footer-foreground/60 hover:text-footer-foreground mt-2 transition-colors"
@@ -114,7 +109,7 @@ export function SiteFooter() {
             </li>
             <li className="flex gap-3">
               <Phone className="size-4 mt-0.5 shrink-0" />
-              <a href={`tel:${phone.replace(/\s/g, "")}`} className="hover:text-footer-foreground">{phone}</a>
+              <a href={`tel:${biz.contact.phone.replace(/\s/g, "")}`} className="hover:text-footer-foreground">{biz.contact.phone}</a>
             </li>
           </ul>
         </div>

@@ -1,10 +1,11 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { Calendar, ArrowRight, Phone, MapPin, Leaf, BookOpen } from "lucide-react";
+import { Calendar, ArrowRight, Phone, MapPin, Leaf, BookOpen, ExternalLink } from "lucide-react";
 import { PageShell } from "@/components/PageShell";
 import { CtaBand } from "@/components/CtaBand";
 import { ValuesBand } from "@/components/ValuesBand";
 import { ContactForm } from "@/components/ContactForm";
 import { useServices, useBlogPosts, useTestimonials, useSiteSetting, usePageData } from "@/lib/content-hooks";
+import { useBusinessInfo } from "@/lib/business-info";
 import { getIcon } from "@/lib/icon-map";
 
 export const Route = createFileRoute("/")({
@@ -74,18 +75,11 @@ function BooksShowcase() {
 }
 
 function ContactSection() {
-  const addressLine1 = (useSiteSetting("contact_address_line_1") as string) || "Απόλλωνος 30, ισόγειο";
-  const addressArea = (useSiteSetting("contact_address_area") as string) || "Νέο Ηράκλειο";
-  const addressPostalCode = (useSiteSetting("contact_address_postal_code") as string) || "14121";
-  const addressHint = (useSiteSetting("contact_address_hint") as string) || "";
-  const phoneHint = (useSiteSetting("contact_phone_hint") as string) || "+30 697 437 1139";
-  const hoursLabel = (useSiteSetting("contact_hours_label") as string) || "Ωράριο";
-  const hoursLine1 = (useSiteSetting("contact_hours_line_1") as string) || "Δευ – Παρ: 10:00 – 20:00";
-  const hoursLine2 = (useSiteSetting("contact_hours_line_2") as string) || "Σάββατο: κατόπιν ραντεβού";
-  const mapEmbedUrl = (useSiteSetting("contact_map_embed_url") as string) || "https://www.google.com/maps?q=Απόλλωνος+30+Νέο+Ηράκλειο+Αθήνα+14121&output=embed";
+  const biz = useBusinessInfo();
   const sectionEyebrow = (useSiteSetting("contact_section_eyebrow") as string) || "Στοιχεία επικοινωνίας";
   const ctaText = (useSiteSetting("contact_cta_text") as string) || "Κλείστε ραντεβού";
   const ctaLink = (useSiteSetting("contact_cta_link") as string) || "/contact";
+  const hoursLabel = (useSiteSetting("contact_hours_label") as string) || "Ωράριο";
 
   return (
     <section className="bg-secondary/50 border-t border-border">
@@ -96,19 +90,24 @@ function ContactSection() {
             <li className="flex gap-3">
               <MapPin className="size-5 text-primary mt-0.5 shrink-0" strokeWidth={1.5} />
               <div className="space-y-1">
-                <p className="text-foreground"><span className="text-muted-foreground text-sm">Οδός:</span> {addressLine1}</p>
-                <p className="text-foreground"><span className="text-muted-foreground text-sm">Περιοχή:</span> {addressArea}</p>
-                <p className="text-foreground"><span className="text-muted-foreground text-sm">Τ.Κ.:</span> {addressPostalCode}</p>
+                <p className="text-foreground"><span className="text-muted-foreground text-sm">Οδός:</span> {biz.address.street} {biz.address.number}{biz.address.floor ? `, ${biz.address.floor}` : ""}</p>
+                <p className="text-foreground"><span className="text-muted-foreground text-sm">Περιοχή:</span> {biz.address.area}</p>
+                <p className="text-foreground"><span className="text-muted-foreground text-sm">Τ.Κ.:</span> {biz.address.postal_code}</p>
               </div>
             </li>
             <li className="flex gap-3">
               <Phone className="size-5 text-primary mt-0.5 shrink-0" strokeWidth={1.5} />
-              <a href={`tel:${phoneHint.replace(/\s/g, "")}`} className="text-foreground font-medium hover:text-primary">{phoneHint}</a>
+              <a href={`tel:${biz.contact.phone.replace(/\s/g, "")}`} className="text-foreground font-medium hover:text-primary">{biz.contact.phone}</a>
             </li>
             <li className="text-sm text-muted-foreground">
               <p className="text-foreground font-medium mb-1">{hoursLabel}</p>
-              {hoursLine1}<br />
-              {hoursLine2}
+              <span>Δευ: {biz.hours.monday}<br /></span>
+              <span>Τρ: {biz.hours.tuesday}<br /></span>
+              <span>Τετ: {biz.hours.wednesday}<br /></span>
+              <span>Πεμ: {biz.hours.thursday}<br /></span>
+              <span>Παρ: {biz.hours.friday}<br /></span>
+              <span>Σαβ: {biz.hours.saturday}<br /></span>
+              <span>Κυρ: {biz.hours.sunday}</span>
             </li>
           </ul>
           <Link to={ctaLink} className="btn-cta mt-7 text-xs tracking-[0.18em] uppercase">
@@ -117,7 +116,7 @@ function ContactSection() {
         </div>
         <div className="card-soft p-6"><ContactForm compact /></div>
         <div className="overflow-hidden rounded-xl border border-border">
-          <iframe title="Map" src={mapEmbedUrl} loading="lazy" className="w-full h-full min-h-[360px] border-0" />
+          <iframe title="Map" src={biz.maps.embed_url} loading="lazy" className="w-full h-full min-h-[360px] border-0" />
         </div>
       </div>
     </section>
