@@ -2,17 +2,13 @@ import { Link } from "@tanstack/react-router";
 import { Phone, MapPin, Mail, Facebook, ExternalLink } from "lucide-react";
 import { useSiteSetting } from "@/lib/content-hooks";
 import { useBusinessInfo } from "@/lib/business-info";
+import { useBranding } from "@/lib/core-hooks";
 
 interface NavLink { label: string; path: string; }
 
 export function SiteFooter() {
   const biz = useBusinessInfo();
-  const siteName = (useSiteSetting("site_name") as string) || "Νικολας Κολοκοτρωνης";
-  const subtitle = (useSiteSetting("site_subtitle") as string) || "Ψυχολογος";
-  const monogram = (useSiteSetting("site_monogram") as string) || "ΝΚ";
-  const logoUrl = (useSiteSetting("site_logo_footer") as string) || (useSiteSetting("site_logo") as string) || "";
-  const tagline = (useSiteSetting("site_tagline") as string) || "Ένας ασφαλής χώρος για αυτογνωσία, ισορροπία και αλλαγή.";
-  const copyright = (useSiteSetting("footer_copyright") as string) || "Νικόλας Κολοκοτρώνης — Ψυχολόγος · Νέο Ηράκλειο";
+  const branding = useBranding();
   const footerNavLinks = (useSiteSetting("footer_nav_links") as NavLink[]) || [];
   const pageVisibility = (useSiteSetting("page_visibility") as Record<string, boolean>) || {};
   const emailLabel = (useSiteSetting("contact_email_label") as string) || "Email";
@@ -38,22 +34,22 @@ export function SiteFooter() {
       <div className="container-page py-10 sm:py-14 grid gap-8 sm:gap-10 md:grid-cols-4">
         <div className="md:col-span-2">
           <div className="flex items-center gap-3 mb-4">
-            {logoUrl ? (
+            {branding.logo || branding.logo_footer ? (
               <span className="inline-flex items-center justify-center size-12 border border-footer-foreground/40 shrink-0 overflow-hidden">
-                <img src={logoUrl} alt={siteName} className="size-full object-contain p-1" />
+                <img src={branding.logo_footer || branding.logo || ''} alt={branding.site_name} className="size-full object-contain p-1" />
               </span>
             ) : (
               <span className="inline-flex items-center justify-center size-12 border border-footer-foreground/40 shrink-0 overflow-hidden">
-                <img src="/logo-white.png" alt={siteName} className="size-full object-contain p-1" />
+                <img src="/logo-white.png" alt={branding.site_name} className="size-full object-contain p-1" />
               </span>
             )}
             <span className="flex flex-col leading-tight">
-              <span className="font-serif text-base tracking-[0.18em] uppercase">{siteName}</span>
-              <span className="text-xs tracking-widest uppercase text-footer-foreground/60">{subtitle}</span>
+              <span className="font-serif text-base tracking-[0.18em] uppercase">{branding.site_name}</span>
+              <span className="text-xs tracking-widest uppercase text-footer-foreground/60">{branding.site_subtitle}</span>
             </span>
           </div>
           <p className="text-sm text-footer-foreground/70 max-w-sm leading-relaxed">
-            {tagline}
+            {branding.tagline}
           </p>
           {biz.social.facebook && (
             <a
@@ -117,7 +113,7 @@ export function SiteFooter() {
       <div className="border-t border-footer-foreground/10">
         <div className="container-page py-4 sm:py-5 text-xs text-footer-foreground/60 flex flex-col sm:flex-row justify-between gap-3">
           <span className="flex flex-col sm:flex-row sm:gap-1">
-            <span>© {new Date().getFullYear()} {copyright}</span>
+            <span>© {new Date().getFullYear()} {branding.copyright}</span>
             <span>Website designed &amp; developed by <a href="https://www.aionweb.gr" target="_blank" rel="noopener noreferrer" class="hover:text-footer-foreground">AION WEB</a>.</span>
           </span>
           <div className="flex gap-5">

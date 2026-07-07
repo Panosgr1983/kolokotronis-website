@@ -1,4 +1,4 @@
-import { useSiteSetting } from "./content-hooks";
+import { useCoreEntityData } from "./core-hooks";
 
 export interface BusinessAddress {
   name: string;
@@ -103,13 +103,5 @@ const defaultBusinessInfo: BusinessInformation = {
 };
 
 export function useBusinessInfo(): BusinessInformation {
-  const raw = useSiteSetting("business_information");
-  if (!raw || typeof raw !== "object") return defaultBusinessInfo;
-  return {
-    address: { ...defaultBusinessInfo.address, ...((raw as any).address || {}) },
-    contact: { ...defaultBusinessInfo.contact, ...((raw as any).contact || {}) },
-    maps: { ...defaultBusinessInfo.maps, ...((raw as any).maps || {}) },
-    social: { ...defaultBusinessInfo.social, ...((raw as any).social || {}) },
-    hours: { ...defaultBusinessInfo.hours, ...((raw as any).hours || {}) },
-  };
+  return useCoreEntityData('business_information', defaultBusinessInfo);
 }

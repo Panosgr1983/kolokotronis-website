@@ -14,6 +14,7 @@ import { Toaster } from "sonner";
 import { usePageviewTracking } from "../lib/analytics";
 import { supabase } from "../lib/supabase";
 import { TENANT_ID } from "../lib/content-hooks";
+import { useBranding } from "../lib/core-hooks";
 
 import appCss from "../styles.css?url";
 
@@ -138,9 +139,8 @@ function RootShell({ children }: { children: React.ReactNode }) {
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
   usePageviewTracking();
-
-  const settings = queryClient.getQueryData(["site_settings"]) as Record<string, unknown> | undefined;
-  const favicon = (settings?.site_favicon as string) || "/logo.png";
+  const branding = useBranding();
+  const favicon = branding.favicon || "/logo.png";
 
   useEffect(() => {
     const link = document.querySelector("link[rel*='icon']") || document.createElement("link");
