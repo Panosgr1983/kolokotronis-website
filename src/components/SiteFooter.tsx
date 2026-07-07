@@ -20,6 +20,14 @@ export function SiteFooter() {
   const addressLabel = (useSiteSetting("contact_address_label") as string) || "Απόλλωνος 30, ισόγειο";
   const addressHint = (useSiteSetting("contact_address_hint") as string) || "Νέο Ηράκλειο, Αθήνα 14121";
 
+  const footerNavHeading = (useSiteSetting("footer_heading_nav") as string) || "Πλοήγηση";
+  const footerContactHeading = (useSiteSetting("footer_heading_contact") as string) || "Επικοινωνία";
+  const addressArea = (useSiteSetting("contact_address_area") as string) || "Νέο Ηράκλειο";
+  const addressPostalCode = (useSiteSetting("contact_address_postal_code") as string) || "14121";
+  const openMapsText = (useSiteSetting("contact_open_maps_text") as string) || "Άνοιγμα στους Χάρτες";
+  const privacyText = (useSiteSetting("footer_privacy_text") as string) || "Πολιτική Απορρήτου";
+  const termsText = (useSiteSetting("footer_terms_text") as string) || "Όροι Χρήσης";
+
   const nav = (footerNavLinks.length > 0 ? footerNavLinks : [
     { label: "Αρχική", path: "/" },
     { label: "Βιογραφικό", path: "/about" },
@@ -66,7 +74,7 @@ export function SiteFooter() {
         </div>
 
         <div>
-          <h4 className="text-xs tracking-[0.2em] uppercase mb-4 text-footer-foreground/60">Πλοηγηση</h4>
+          <h4 className="text-xs tracking-[0.2em] uppercase mb-4 text-footer-foreground/60">{footerNavHeading}</h4>
           <ul className="space-y-2.5 text-sm">
             {nav.map((l) => (
               <li key={l.path}>
@@ -79,7 +87,7 @@ export function SiteFooter() {
         </div>
 
         <div>
-          <h4 className="text-xs tracking-[0.2em] uppercase mb-4 text-footer-foreground/60">Επικοινωνια</h4>
+          <h4 className="text-xs tracking-[0.2em] uppercase mb-4 text-footer-foreground/60">{footerContactHeading}</h4>
           <ul className="space-y-3 text-sm text-footer-foreground/80">
             {email && (
               <li className="flex gap-3">
@@ -91,8 +99,8 @@ export function SiteFooter() {
               <MapPin className="size-4 mt-0.5 shrink-0" />
               <span className="space-y-0.5">
                 <p className="text-footer-foreground/80"><span className="text-footer-foreground/60 text-xs">Οδός:</span> {addressLabel}</p>
-                <p className="text-footer-foreground/80"><span className="text-footer-foreground/60 text-xs">Περιοχή:</span> Νέο Ηράκλειο</p>
-                <p className="text-footer-foreground/80"><span className="text-footer-foreground/60 text-xs">Τ.Κ.:</span> 14121</p>
+                <p className="text-footer-foreground/80"><span className="text-footer-foreground/60 text-xs">Περιοχή:</span> {addressArea}</p>
+                <p className="text-footer-foreground/80"><span className="text-footer-foreground/60 text-xs">Τ.Κ.:</span> {addressPostalCode}</p>
                 <a
                   href="https://www.google.com/maps/dir/?api=1&destination=%CE%91%CF%80%CF%8C%CE%BB%CE%BB%CF%89%CE%BD%CE%BF%CF%82+30+%CE%9D%CE%AD%CE%BF+%CE%97%CF%81%CE%AC%CE%BA%CE%BB%CE%B5%CE%B9%CE%BF+%CE%91%CE%B8%CE%AE%CE%BD%CE%B1+14121"
                   target="_blank"
@@ -100,7 +108,7 @@ export function SiteFooter() {
                   className="inline-flex items-center gap-1.5 text-xs text-footer-foreground/60 hover:text-footer-foreground mt-2 transition-colors"
                 >
                   <ExternalLink className="size-3" />
-                  Άνοιγμα στους Χάρτες
+                  {openMapsText}
                 </a>
               </span>
             </li>
@@ -118,8 +126,8 @@ export function SiteFooter() {
             <span>Website designed &amp; developed by <a href="https://www.aionweb.gr" target="_blank" rel="noopener noreferrer" class="hover:text-footer-foreground">AION WEB</a>.</span>
           </span>
           <div className="flex gap-5">
-            {pageVisibility['/privacy'] !== false && <Link to="/privacy" className="hover:text-footer-foreground">Πολιτική Απορρήτου</Link>}
-            {pageVisibility['/terms'] !== false && <Link to="/terms" className="hover:text-footer-foreground">Όροι Χρήσης</Link>}
+            {pageVisibility['/privacy'] !== false && <Link to="/privacy" className="hover:text-footer-foreground">{privacyText}</Link>}
+            {pageVisibility['/terms'] !== false && <Link to="/terms" className="hover:text-footer-foreground">{termsText}</Link>}
           </div>
         </div>
       </div>

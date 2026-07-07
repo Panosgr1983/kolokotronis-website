@@ -75,26 +75,30 @@ function BooksShowcase() {
 
 function ContactSection() {
   const addressLine1 = (useSiteSetting("contact_address_line_1") as string) || "Απόλλωνος 30, ισόγειο";
-  const addressLine2 = (useSiteSetting("contact_address_line_2") as string) || "Νέο Ηράκλειο, Αθήνα 14121";
+  const addressArea = (useSiteSetting("contact_address_area") as string) || "Νέο Ηράκλειο";
+  const addressPostalCode = (useSiteSetting("contact_address_postal_code") as string) || "14121";
   const addressHint = (useSiteSetting("contact_address_hint") as string) || "";
   const phoneHint = (useSiteSetting("contact_phone_hint") as string) || "+30 697 437 1139";
   const hoursLabel = (useSiteSetting("contact_hours_label") as string) || "Ωράριο";
   const hoursLine1 = (useSiteSetting("contact_hours_line_1") as string) || "Δευ – Παρ: 10:00 – 20:00";
   const hoursLine2 = (useSiteSetting("contact_hours_line_2") as string) || "Σάββατο: κατόπιν ραντεβού";
   const mapEmbedUrl = (useSiteSetting("contact_map_embed_url") as string) || "https://www.google.com/maps?q=Απόλλωνος+30+Νέο+Ηράκλειο+Αθήνα+14121&output=embed";
+  const sectionEyebrow = (useSiteSetting("contact_section_eyebrow") as string) || "Στοιχεία επικοινωνίας";
+  const ctaText = (useSiteSetting("contact_cta_text") as string) || "Κλείστε ραντεβού";
+  const ctaLink = (useSiteSetting("contact_cta_link") as string) || "/contact";
 
   return (
     <section className="bg-secondary/50 border-t border-border">
       <div className="container-page py-12 sm:py-16 md:py-20 grid lg:grid-cols-3 gap-6 sm:gap-10">
         <div>
-          <p className="text-xs tracking-[0.25em] uppercase text-primary mb-4">Στοιχεια επικοινωνιας</p>
+          <p className="text-xs tracking-[0.25em] uppercase text-primary mb-4">{sectionEyebrow}</p>
           <ul className="space-y-5">
             <li className="flex gap-3">
               <MapPin className="size-5 text-primary mt-0.5 shrink-0" strokeWidth={1.5} />
               <div className="space-y-1">
                 <p className="text-foreground"><span className="text-muted-foreground text-sm">Οδός:</span> {addressLine1}</p>
-                <p className="text-foreground"><span className="text-muted-foreground text-sm">Περιοχή:</span> Νέο Ηράκλειο</p>
-                <p className="text-foreground"><span className="text-muted-foreground text-sm">Τ.Κ.:</span> 14121</p>
+                <p className="text-foreground"><span className="text-muted-foreground text-sm">Περιοχή:</span> {addressArea}</p>
+                <p className="text-foreground"><span className="text-muted-foreground text-sm">Τ.Κ.:</span> {addressPostalCode}</p>
               </div>
             </li>
             <li className="flex gap-3">
@@ -107,8 +111,8 @@ function ContactSection() {
               {hoursLine2}
             </li>
           </ul>
-          <Link to="/contact" className="btn-cta mt-7 text-xs tracking-[0.18em] uppercase">
-            <Calendar className="size-4" /> Κλειστε ραντεβου
+          <Link to={ctaLink} className="btn-cta mt-7 text-xs tracking-[0.18em] uppercase">
+            <Calendar className="size-4" /> {ctaText}
           </Link>
         </div>
         <div className="card-soft p-6"><ContactForm compact /></div>

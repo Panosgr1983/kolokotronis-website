@@ -21,6 +21,8 @@ function ContactPage() {
   const addressLabel = (useSiteSetting("contact_address_label") as string) || "Διεύθυνση";
   const addressLine1 = (useSiteSetting("contact_address_line_1") as string) || "Απόλλωνος 30, ισόγειο";
   const addressLine2 = (useSiteSetting("contact_address_line_2") as string) || "Νέο Ηράκλειο, Αθήνα 14121";
+  const addressArea = (useSiteSetting("contact_address_area") as string) || "Νέο Ηράκλειο";
+  const addressPostalCode = (useSiteSetting("contact_address_postal_code") as string) || "14121";
   const addressHint = (useSiteSetting("contact_address_hint") as string) || "";
 
   const hoursLabel = (useSiteSetting("contact_hours_label") as string) || "Ωράριο";
@@ -35,6 +37,8 @@ function ContactPage() {
 
   const formHeading = (useSiteSetting("contact_form_heading") as string) || "Θα σας απαντήσω εντός 24 ωρών.";
   const contactEmail = (useSiteSetting("contact_email") as string) || "";
+  const mapTitle = (useSiteSetting("contact_map_title") as string) || "Χάρτης";
+  const openMapsText = (useSiteSetting("contact_open_maps_text") as string) || "Άνοιγμα στους Χάρτες";
 
   return (
     <PageShell>
@@ -63,10 +67,10 @@ function ContactPage() {
               <MapPin className="size-5" />
             </span>
             <div className="space-y-1.5">
-              <p className="text-sm text-muted-foreground font-medium tracking-wider uppercase">Διεύθυνση</p>
+              <p className="text-sm text-muted-foreground font-medium tracking-wider uppercase">{addressLabel}</p>
               <p className="text-foreground"><span className="text-muted-foreground text-sm">Οδός:</span> {addressLine1}</p>
-              <p className="text-foreground"><span className="text-muted-foreground text-sm">Περιοχή:</span> Νέο Ηράκλειο</p>
-              <p className="text-foreground"><span className="text-muted-foreground text-sm">Τ.Κ.:</span> 14121</p>
+              <p className="text-foreground"><span className="text-muted-foreground text-sm">Περιοχή:</span> {addressArea}</p>
+              <p className="text-foreground"><span className="text-muted-foreground text-sm">Τ.Κ.:</span> {addressPostalCode}</p>
             </div>
           </div>
 
@@ -103,7 +107,7 @@ function ContactPage() {
       <section className="container-page pb-12 sm:pb-20">
         <div className="card-soft overflow-hidden p-0">
           <iframe
-            title="Χάρτης"
+            title={mapTitle}
             src={mapEmbedUrl}
             loading="lazy"
             className="w-full h-[420px] border-0"
@@ -116,7 +120,7 @@ function ContactPage() {
             rel="noopener noreferrer"
             className="btn-cta text-xs tracking-[0.18em] uppercase"
           >
-            Άνοιγμα στους Χάρτες
+            {openMapsText}
           </a>
         </div>
       </section>
