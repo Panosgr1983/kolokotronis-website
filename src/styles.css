@@ -156,3 +156,25 @@
     transform: translateY(-2px);
   }
 }
+
+@media (max-width: 1024px) {
+  .bg-fixed {
+    background-attachment: scroll !important;
+  }
+}
+
+@media (max-width: 768px) {
+  .min-h-\[350px\] {
+    min-height: 220px !important;
+  }
+  .min-h-\[300px\] {
+    min-height: 180px !important;
+  }
+  .aspect-\[2\.35\/1\] {
+    aspect-ratio: 16/9;
+  }
+  .container-page {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+}

@@ -35,15 +35,15 @@ function ServicesPage() {
         backgroundImage={servicesPage.hero_image}
       />
 
-      <section className="container-page py-16 md:py-20">
+      <section className="container-page py-12 sm:py-16 md:py-20">
         {isLoading ? (
           <div className="flex justify-center py-20"><div className="size-8 border-2 border-primary/30 border-t-primary rounded-full animate-spin" /></div>
         ) : (
-          <div className="grid md:grid-cols-2 gap-7">
+          <div className="grid md:grid-cols-2 gap-5 sm:gap-7">
             {services.map((s) => {
               const Icon = getIcon(s.icon);
               return (
-                <article key={s.id} className="card-soft p-8 flex flex-col">
+                <article key={s.id} className="card-soft p-6 sm:p-8 flex flex-col">
                   <div className="size-14 rounded-xl bg-primary/10 text-primary flex items-center justify-center mb-5">
                     <Icon className="size-7" />
                   </div>
@@ -62,14 +62,6 @@ function ServicesPage() {
             })}
           </div>
         )}
-
-        <div className="mt-14 card-soft p-8 md:p-10 bg-secondary/40 text-center">
-          <h3 className="font-serif text-2xl mb-3">Δεν είστε σίγουροι τι σας ταιριάζει;</h3>
-          <p className="text-muted-foreground max-w-xl mx-auto mb-6">
-            Σε μια πρώτη γνωριμία θα συζητήσουμε τι αναζητάτε και θα προτείνω την κατάλληλη προσέγγιση για εσάς.
-          </p>
-          <Link to="/contact" className="btn-cta">Επικοινωνήστε</Link>
-        </div>
       </section>
 
       <CtaBand />

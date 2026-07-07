@@ -41,11 +41,11 @@ function BlogPage() {
         backgroundImage={blogPage.hero_image}
       />
 
-      <section className="container-page py-16 md:py-20">
+      <section className="container-page py-12 sm:py-16 md:py-20">
         {isLoading ? (
           <div className="flex justify-center py-20"><div className="size-8 border-2 border-primary/30 border-t-primary rounded-full animate-spin" /></div>
         ) : (
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-7">
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-7">
             {posts.length === 0 && (
               <div className="col-span-full text-center py-20 text-muted-foreground">Δεν υπάρχουν ακόμα άρθρα.</div>
             )}

@@ -6,7 +6,7 @@ export function ValuesBand() {
 
   return (
     <section className="bg-trust text-trust-foreground">
-      <div className="container-page py-16 md:py-20 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10">
+      <div className="container-page py-12 sm:py-16 md:py-20 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8 lg:gap-10">
         {isLoading ? (
           <div className="col-span-full flex justify-center"><div className="size-8 border-2 border-trust-foreground/30 border-t-white rounded-full animate-spin" /></div>
         ) : (

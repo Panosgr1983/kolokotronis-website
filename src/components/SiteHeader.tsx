@@ -18,9 +18,10 @@ export function SiteHeader() {
 
   const nav = (navLinks.length > 0 ? navLinks : [
     { label: "Αρχικη", path: "/" },
-    { label: "Σχετικα με εμενα", path: "/about" },
+    { label: "Βιογραφικο", path: "/about" },
     { label: "Υπηρεσιες", path: "/services" },
-    { label: "Αρθρα", path: "/blog" },
+    { label: "Ομαδες", path: "/services/omades" },
+    { label: "Ομιλιες, Σεμιναρια", path: "/blog" },
     { label: "Βιβλια", path: "/books" },
     { label: "Επικοινωνια", path: "/contact" },
   ]).filter(n => pageVisibility[n.path] !== false);
@@ -28,21 +29,21 @@ export function SiteHeader() {
   return (
     <header className="sticky top-0 z-50 bg-background/90 backdrop-blur-md border-b border-border">
       <div className="container-page flex items-center justify-between h-20 py-4">
-        <Link to="/" className="flex items-center gap-3" onClick={() => setOpen(false)}>
+        <Link to="/" className="flex items-center max-[400px]:gap-1.5 gap-3" onClick={() => setOpen(false)}>
           {logoUrl ? (
-            <span className="inline-flex items-center justify-center size-12 border border-foreground/30 shrink-0 overflow-hidden">
+            <span className="inline-flex items-center justify-center max-[400px]:size-10 size-12 border border-foreground/30 shrink-0 overflow-hidden">
               <img src={logoUrl} alt={siteName} className="size-full object-contain p-1" />
             </span>
           ) : (
-            <span className="inline-flex items-center justify-center size-12 border border-foreground/30 shrink-0 overflow-hidden">
+            <span className="inline-flex items-center justify-center max-[400px]:size-10 size-12 border border-foreground/30 shrink-0 overflow-hidden">
               <img src="/logo.png" alt={siteName} className="size-full object-contain p-1" />
             </span>
           )}
           <span className="flex flex-col leading-tight">
-            <span className="font-serif text-base md:text-lg tracking-[0.18em] uppercase text-foreground">
+            <span className="font-serif max-sm:text-xs sm:text-base md:text-lg max-sm:tracking-[0.1em] sm:tracking-[0.18em] uppercase text-foreground whitespace-nowrap">
               {siteName}
             </span>
-            <span className="text-xs tracking-widest uppercase text-muted-foreground">{subtitle}</span>
+            <span className="max-sm:text-[10px] text-xs tracking-widest uppercase text-muted-foreground whitespace-nowrap">{subtitle}</span>
           </span>
         </Link>
 
@@ -51,7 +52,7 @@ export function SiteHeader() {
             <Link
               key={n.path}
               to={n.path}
-              className="text-[11px] tracking-[0.2em] uppercase text-foreground/75 hover:text-primary transition-colors pb-1 border-b-2 border-transparent"
+              className="text-[11px] tracking-[0.2em] uppercase text-foreground/75 hover:text-primary transition-colors py-2.5 border-b-2 border-transparent leading-none"
               activeProps={{ className: "text-primary border-primary" }}
               activeOptions={{ exact: n.path === "/" }}
             >

@@ -20,7 +20,7 @@ function ContactPage() {
 
   const addressLabel = (useSiteSetting("contact_address_label") as string) || "Διεύθυνση";
   const addressLine1 = (useSiteSetting("contact_address_line_1") as string) || "Απόλλωνος 30, ισόγειο";
-  const addressLine2 = (useSiteSetting("contact_address_line_2") as string) || "Νέο Ηράκλειο, Αθήνα";
+  const addressLine2 = (useSiteSetting("contact_address_line_2") as string) || "Νέο Ηράκλειο, Αθήνα 14121";
   const addressHint = (useSiteSetting("contact_address_hint") as string) || "";
 
   const hoursLabel = (useSiteSetting("contact_hours_label") as string) || "Ωράριο";
@@ -30,7 +30,8 @@ function ContactPage() {
   const socialLabel = (useSiteSetting("contact_social_label") as string) || "Social";
   const facebookUrl = (useSiteSetting("contact_social_facebook_url") as string) || "";
 
-  const mapEmbedUrl = (useSiteSetting("contact_map_embed_url") as string) || "https://www.google.com/maps?q=Απόλλωνος+30,+Νέο+Ηράκλειο,+Αθήνα&output=embed";
+  const mapEmbedUrl = (useSiteSetting("contact_map_embed_url") as string) || "https://www.google.com/maps?q=Απόλλωνος+30+Νέο+Ηράκλειο+Αθήνα+14121&output=embed";
+  const mapsUrl = (useSiteSetting("contact_maps_url") as string) || "https://www.google.com/maps/dir/?api=1&destination=Απόλλωνος+30+Νέο+Ηράκλειο+Αθήνα+14121";
 
   const formHeading = (useSiteSetting("contact_form_heading") as string) || "Θα σας απαντήσω εντός 24 ωρών.";
   const contactEmail = (useSiteSetting("contact_email") as string) || "";
@@ -44,7 +45,7 @@ function ContactPage() {
         backgroundImage={contactPage.hero_image}
       />
 
-      <section className="container-page py-16 md:py-20 grid lg:grid-cols-2 gap-10">
+      <section className="container-page py-12 sm:py-16 md:py-20 grid lg:grid-cols-2 gap-6 sm:gap-10">
         <div className="space-y-6">
           <div className="card-soft p-7 flex gap-5">
             <span className="size-12 rounded-lg bg-primary/10 text-primary flex items-center justify-center shrink-0">
@@ -61,11 +62,11 @@ function ContactPage() {
             <span className="size-12 rounded-lg bg-primary/10 text-primary flex items-center justify-center shrink-0">
               <MapPin className="size-5" />
             </span>
-            <div>
-              <p className="text-sm text-muted-foreground mb-1">{addressLabel}</p>
-              <p className="font-medium text-foreground">{addressLine1}</p>
-              {addressLine2 && <p className="text-foreground">{addressLine2}</p>}
-              {addressHint && <p className="text-sm text-muted-foreground mt-1">{addressHint}</p>}
+            <div className="space-y-1.5">
+              <p className="text-sm text-muted-foreground font-medium tracking-wider uppercase">Διεύθυνση</p>
+              <p className="text-foreground"><span className="text-muted-foreground text-sm">Οδός:</span> {addressLine1}</p>
+              <p className="text-foreground"><span className="text-muted-foreground text-sm">Περιοχή:</span> Νέο Ηράκλειο</p>
+              <p className="text-foreground"><span className="text-muted-foreground text-sm">Τ.Κ.:</span> 14121</p>
             </div>
           </div>
 
@@ -99,7 +100,7 @@ function ContactPage() {
         </div>
       </section>
 
-      <section className="container-page pb-20">
+      <section className="container-page pb-12 sm:pb-20">
         <div className="card-soft overflow-hidden p-0">
           <iframe
             title="Χάρτης"
@@ -107,6 +108,16 @@ function ContactPage() {
             loading="lazy"
             className="w-full h-[420px] border-0"
           />
+        </div>
+        <div className="text-center mt-6">
+          <a
+            href={mapsUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="btn-cta text-xs tracking-[0.18em] uppercase"
+          >
+            Άνοιγμα στους Χάρτες
+          </a>
         </div>
       </section>
     </PageShell>

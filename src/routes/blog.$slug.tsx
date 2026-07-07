@@ -114,16 +114,16 @@ function BlogPostPage() {
     <PageShell>
       <article>
         <div
-          className="relative aspect-[2.35/1] min-h-[300px] bg-fixed bg-top bg-cover"
+          className="relative aspect-[2.35/1] min-h-[300px] bg-fixed sm:bg-top bg-center bg-cover"
           style={post.image_url ? { backgroundImage: `url(${post.image_url})` } : undefined}
         >
           <div className="absolute inset-0 bg-gradient-to-t from-background via-background/40 to-transparent" />
-          <div className="absolute bottom-0 left-0 right-0 container-page pb-10">
-            <Link to="/blog" className="inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors mb-4">
+          <div className="absolute bottom-0 left-0 right-0 container-page pb-6 sm:pb-10">
+            <Link to="/blog" className="inline-flex items-center gap-1.5 text-xs sm:text-sm text-muted-foreground hover:text-foreground transition-colors mb-3 sm:mb-4">
               <ArrowLeft size={14} /> Ολα τα αρθρα
             </Link>
-            <h1 className="font-serif text-3xl md:text-5xl lg:text-6xl text-foreground max-w-3xl leading-tight">{post.title}</h1>
-            <div className="flex items-center gap-3 mt-4 text-sm text-muted-foreground">
+            <h1 className="font-serif text-xl sm:text-3xl md:text-5xl lg:text-6xl text-foreground max-w-3xl leading-tight">{post.title}</h1>
+            <div className="flex items-center gap-3 mt-3 sm:mt-4 text-xs sm:text-sm text-muted-foreground">
               <Calendar size={14} />
               <span>{formatDate(post.published_at)}</span>
               {post.category && <><span>·</span><span className="text-primary font-medium">{post.category}</span></>}
@@ -133,7 +133,7 @@ function BlogPostPage() {
 
         <div className="container-page py-12 md:py-16 max-w-3xl mx-auto" dangerouslySetInnerHTML={{ __html: renderTipContent(post.content) }} />
 
-        <div className="container-page pb-16 text-center border-t border-border pt-10">
+        <div className="container-page pb-12 sm:pb-16 text-center border-t border-border pt-6 sm:pt-10">
           <Link to="/blog" className="inline-flex items-center gap-2 text-primary hover:gap-3 transition-all">
             <ArrowLeft size={14} /> Ολα τα αρθρα
           </Link>

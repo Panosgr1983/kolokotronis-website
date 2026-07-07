@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { Calendar, ArrowRight, Phone, MapPin, PlayCircle, Leaf, BookOpen } from "lucide-react";
+import { Calendar, ArrowRight, Phone, MapPin, Leaf, BookOpen } from "lucide-react";
 import { PageShell } from "@/components/PageShell";
 import { CtaBand } from "@/components/CtaBand";
 import { ValuesBand } from "@/components/ValuesBand";
@@ -33,9 +33,9 @@ function BooksShowcase() {
 
   return (
     <section className="bg-secondary/30 border-y border-border">
-      <div className="container-page py-20 md:py-24">
-        <div className="flex items-end justify-between mb-12 flex-wrap gap-4">
-          <h2 className="font-serif text-3xl md:text-4xl">{showcaseTitle}</h2>
+      <div className="container-page py-14 sm:py-20 md:py-24">
+        <div className="flex items-end justify-between mb-8 sm:mb-12 flex-wrap gap-4">
+          <h2 className="font-serif text-2xl sm:text-3xl md:text-4xl">{showcaseTitle}</h2>
           <Link to={linkUrl} className="text-primary text-xs tracking-[0.2em] uppercase font-medium inline-flex items-center gap-2 hover:gap-3 transition-all">
             {linkText} <ArrowRight className="size-4" />
           </Link>
@@ -75,25 +75,26 @@ function BooksShowcase() {
 
 function ContactSection() {
   const addressLine1 = (useSiteSetting("contact_address_line_1") as string) || "Απόλλωνος 30, ισόγειο";
-  const addressLine2 = (useSiteSetting("contact_address_line_2") as string) || "Νέο Ηράκλειο, Αθήνα";
+  const addressLine2 = (useSiteSetting("contact_address_line_2") as string) || "Νέο Ηράκλειο, Αθήνα 14121";
   const addressHint = (useSiteSetting("contact_address_hint") as string) || "";
   const phoneHint = (useSiteSetting("contact_phone_hint") as string) || "+30 697 437 1139";
   const hoursLabel = (useSiteSetting("contact_hours_label") as string) || "Ωράριο";
   const hoursLine1 = (useSiteSetting("contact_hours_line_1") as string) || "Δευ – Παρ: 10:00 – 20:00";
   const hoursLine2 = (useSiteSetting("contact_hours_line_2") as string) || "Σάββατο: κατόπιν ραντεβού";
-  const mapEmbedUrl = (useSiteSetting("contact_map_embed_url") as string) || "https://www.google.com/maps?q=Απόλλωνος+30,+Νέο+Ηράκλειο,+Αθήνα&output=embed";
+  const mapEmbedUrl = (useSiteSetting("contact_map_embed_url") as string) || "https://www.google.com/maps?q=Απόλλωνος+30+Νέο+Ηράκλειο+Αθήνα+14121&output=embed";
 
   return (
     <section className="bg-secondary/50 border-t border-border">
-      <div className="container-page py-16 md:py-20 grid lg:grid-cols-3 gap-10">
+      <div className="container-page py-12 sm:py-16 md:py-20 grid lg:grid-cols-3 gap-6 sm:gap-10">
         <div>
           <p className="text-xs tracking-[0.25em] uppercase text-primary mb-4">Στοιχεια επικοινωνιας</p>
           <ul className="space-y-5">
             <li className="flex gap-3">
               <MapPin className="size-5 text-primary mt-0.5 shrink-0" strokeWidth={1.5} />
-              <div>
-                <p className="text-foreground font-medium">{addressLine1}</p>
-                <p className="text-sm text-muted-foreground">{addressLine2}{addressHint && <><br />{addressHint}</>}</p>
+              <div className="space-y-1">
+                <p className="text-foreground"><span className="text-muted-foreground text-sm">Οδός:</span> {addressLine1}</p>
+                <p className="text-foreground"><span className="text-muted-foreground text-sm">Περιοχή:</span> Νέο Ηράκλειο</p>
+                <p className="text-foreground"><span className="text-muted-foreground text-sm">Τ.Κ.:</span> 14121</p>
               </div>
             </li>
             <li className="flex gap-3">
@@ -136,7 +137,7 @@ function HomePage() {
   const servicesSectionTitle = (useSiteSetting("services_section_title") as string) || "Πώς μπορώ να σας βοηθήσω";
   const servicesSectionLinkText = (useSiteSetting("services_section_link_text") as string) || "Ολες οι υπηρεσιες";
 
-  const aboutSectionEyebrow = (useSiteSetting("about_section_eyebrow") as string) || "Σχετικα με εμενα";
+  const aboutSectionEyebrow = (useSiteSetting("about_section_eyebrow") as string) || "Βιογραφικο";
   const aboutSectionTitle = (useSiteSetting("about_section_title") as string) || "Γεια σας, είμαι ο Νικόλας Κολοκοτρώνης";
   const aboutSectionParagraph1 = (useSiteSetting("about_section_paragraph_1") as string) || "Πιστεύω ότι κάθε άνθρωπος κουβαλά μέσα του τη δύναμη να αλλάξει — απλώς, μερικές φορές, χρειάζεται κάποιον δίπλα του για να τη ξαναβρεί. Αυτόν τον ρόλο επιλέγω να κρατώ στη δουλειά μου.";
   const aboutSectionParagraph2 = (useSiteSetting("about_section_paragraph_2") as string) || "Είμαι Ψυχολόγος και σύμβουλος ψυχικής υγείας, με εξειδίκευση σε συμπληρωματικές προσεγγίσεις (Ρέικι, NLP, Σωματοδυναμική Ψυχοθεραπεία) και πολυετή εμπειρία στην υποστήριξη ενηλίκων που επιθυμούν να ξεπεράσουν δυσκολίες και να ζήσουν μια πιο ισορροπημένη και ουσιαστική ζωή.";
@@ -152,43 +153,42 @@ function HomePage() {
   return (
     <PageShell>
       <section className="bg-background">
-        <div className="container-page grid lg:grid-cols-2 gap-10 lg:gap-14 items-center pt-12 md:pt-16 pb-16 md:pb-24">
+        <div className="container-page grid lg:grid-cols-2 gap-8 lg:gap-14 items-center pt-10 sm:pt-12 md:pt-16 pb-12 sm:pb-16 md:pb-24">
           <div className="max-w-xl">
-            <Leaf className="size-7 text-primary mb-6 -rotate-12" />
-            <h1 className="font-serif text-5xl md:text-6xl lg:text-7xl text-foreground leading-[1.05]">
+            <Leaf className="size-6 sm:size-7 text-primary mb-4 sm:mb-6 -rotate-12" />
+            <h1 className="font-serif text-4xl sm:text-5xl md:text-6xl lg:text-7xl text-foreground leading-[1.05]">
               {headlineParts.map((part, i) => (
                 <span key={i}>{part}<br /></span>
               ))}
             </h1>
-            <p className="mt-7 text-base md:text-lg text-muted-foreground leading-relaxed max-w-md">
+            <p className="mt-5 sm:mt-7 text-sm sm:text-base md:text-lg text-muted-foreground leading-relaxed max-w-md">
               {heroSubtitle}
             </p>
-            <div className="mt-9 flex flex-wrap items-center gap-4">
+            <div className="mt-6 sm:mt-9 flex flex-wrap items-center gap-3 sm:gap-4">
               <Link to={heroCtaPrimaryLink} className="btn-cta text-xs tracking-[0.18em] uppercase">
                 {heroCtaPrimaryText}
               </Link>
-              <Link to={heroCtaSecondaryLink} className="inline-flex items-center gap-2.5 text-sm tracking-[0.18em] uppercase text-foreground/80 hover:text-primary transition-colors">
-                <PlayCircle className="size-7 text-primary" strokeWidth={1.25} />
+              <Link to={heroCtaSecondaryLink} className="btn-cta text-xs tracking-[0.18em] uppercase">
                 {heroCtaSecondaryText}
               </Link>
             </div>
           </div>
           <div className="relative">
             {heroImage ? (
-              <img src={heroImage} alt="Ζεστός, ήσυχος χώρος θεραπείας" width={1280} height={1280} className="rounded-l-[3rem] rounded-tr-[3rem] aspect-[5/4] object-cover w-full shadow-[var(--shadow-card)]" />
+              <img src={heroImage} alt="Νικόλας Κολοκοτρώνης" width={1000} height={1000} className="rounded-l-[3rem] rounded-tr-[3rem] aspect-square object-cover w-full shadow-[var(--shadow-card)]" />
             ) : (
-              <div className="rounded-l-[3rem] rounded-tr-[3rem] aspect-[5/4] w-full bg-secondary/50 flex items-center justify-center text-muted-foreground text-sm">Προσθέστε εικόνα hero</div>
+              <div className="rounded-l-[3rem] rounded-tr-[3rem] aspect-square w-full bg-secondary/50 flex items-center justify-center text-muted-foreground text-sm">Προσθέστε εικόνα hero</div>
             )}
           </div>
         </div>
       </section>
 
-      <section className="container-page py-20 md:py-24">
+      <section className="container-page py-14 sm:py-20 md:py-24">
         <SectionTitle>{servicesSectionTitle}</SectionTitle>
         {servicesLoading ? (
-          <div className="mt-16 flex justify-center"><div className="size-8 border-2 border-primary/30 border-t-primary rounded-full animate-spin" /></div>
+          <div className="mt-10 sm:mt-16 flex justify-center"><div className="size-8 border-2 border-primary/30 border-t-primary rounded-full animate-spin" /></div>
         ) : (
-          <div className="mt-16 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-10 md:gap-8">
+          <div className="mt-10 sm:mt-16 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6 sm:gap-8 md:gap-10">
               {services.map((s) => {
               const Icon = getIcon(s.icon);
               return (
@@ -211,10 +211,10 @@ function HomePage() {
       </section>
 
       <section className="bg-secondary/50 border-y border-border">
-        <div className="container-page grid lg:grid-cols-2 gap-12 items-center py-20 md:py-24">
+        <div className="container-page grid lg:grid-cols-2 gap-8 lg:gap-12 items-center py-14 sm:py-20 md:py-24">
           <div>
-            <p className="text-xs tracking-[0.25em] uppercase text-primary mb-4">{aboutSectionEyebrow}</p>
-            <h2 className="font-serif text-3xl md:text-4xl mb-6">{aboutSectionTitle}</h2>
+            <p className="text-xs tracking-[0.25em] uppercase text-primary mb-3 sm:mb-4">{aboutSectionEyebrow}</p>
+            <h2 className="font-serif text-2xl sm:text-3xl md:text-4xl mb-4 sm:mb-6">{aboutSectionTitle}</h2>
             <p className="text-muted-foreground leading-relaxed mb-4">{aboutSectionParagraph1}</p>
             <p className="text-muted-foreground leading-relaxed mb-4">{aboutSectionParagraph2}</p>
             <Link to="/about" className="btn-outline text-xs tracking-[0.18em] uppercase">{aboutSectionCtaText}</Link>
@@ -234,7 +234,7 @@ function HomePage() {
       <BooksShowcase />
 
       <section className="bg-background">
-        <div className="container-page py-20 md:py-24">
+        <div className="container-page py-14 sm:py-20 md:py-24">
           <SectionTitle>{testimonialsSectionTitle}</SectionTitle>
           {testimonialsLoading ? (
             <div className="mt-14 flex justify-center"><div className="size-8 border-2 border-primary/30 border-t-primary rounded-full animate-spin" /></div>
@@ -256,9 +256,9 @@ function HomePage() {
 
       <CtaBand />
 
-      <section className="container-page py-20 md:py-24">
-        <div className="flex items-end justify-between mb-12 flex-wrap gap-4">
-          <h2 className="font-serif text-3xl md:text-4xl">{blogSectionTitle}</h2>
+      <section className="container-page py-14 sm:py-20 md:py-24">
+        <div className="flex items-end justify-between mb-8 sm:mb-12 flex-wrap gap-4">
+          <h2 className="font-serif text-2xl sm:text-3xl md:text-4xl">{blogSectionTitle}</h2>
           <Link to="/blog" className="text-primary text-xs tracking-[0.2em] uppercase font-medium inline-flex items-center gap-2 hover:gap-3 transition-all">
             {blogSectionLinkText} <ArrowRight className="size-4" />
           </Link>

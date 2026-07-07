@@ -23,5 +23,13 @@ export default defineConfig({
   },
   vite: {
     plugins: [customStartClientPlugin],
+    resolve: {
+      alias: {
+        "node:async_hooks": resolve(__dirname, "src/lib/async-hooks-polyfill.ts"),
+      },
+    },
+    optimizeDeps: {
+      exclude: ["@tanstack/start-client-core"],
+    },
   },
 });

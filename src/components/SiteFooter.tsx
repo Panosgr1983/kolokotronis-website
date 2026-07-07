@@ -1,5 +1,5 @@
 import { Link } from "@tanstack/react-router";
-import { Phone, MapPin, Mail, Facebook } from "lucide-react";
+import { Phone, MapPin, Mail, Facebook, ExternalLink } from "lucide-react";
 import { useSiteSetting } from "@/lib/content-hooks";
 
 interface NavLink { label: string; path: string; }
@@ -18,20 +18,21 @@ export function SiteFooter() {
   const emailLabel = (useSiteSetting("contact_email_label") as string) || "Email";
   const phone = (useSiteSetting("contact_phone_hint") as string) || "+30 697 437 1139";
   const addressLabel = (useSiteSetting("contact_address_label") as string) || "Απόλλωνος 30, ισόγειο";
-  const addressHint = (useSiteSetting("contact_address_hint") as string) || "Νέο Ηράκλειο, Αθήνα";
+  const addressHint = (useSiteSetting("contact_address_hint") as string) || "Νέο Ηράκλειο, Αθήνα 14121";
 
   const nav = (footerNavLinks.length > 0 ? footerNavLinks : [
     { label: "Αρχική", path: "/" },
-    { label: "Σχετικά με εμένα", path: "/about" },
+    { label: "Βιογραφικό", path: "/about" },
     { label: "Υπηρεσίες", path: "/services" },
-    { label: "Άρθρα", path: "/blog" },
+    { label: "Ομάδες", path: "/services/omades" },
+    { label: "Ομιλίες, Σεμινάρια", path: "/blog" },
     { label: "Βιβλία", path: "/books" },
     { label: "Επικοινωνία", path: "/contact" },
   ]).filter(n => pageVisibility[n.path] !== false);
 
   return (
     <footer className="bg-footer text-footer-foreground mt-20">
-      <div className="container-page py-14 grid gap-10 md:grid-cols-4">
+      <div className="container-page py-10 sm:py-14 grid gap-8 sm:gap-10 md:grid-cols-4">
         <div className="md:col-span-2">
           <div className="flex items-center gap-3 mb-4">
             {logoUrl ? (
@@ -88,7 +89,20 @@ export function SiteFooter() {
             )}
             <li className="flex gap-3">
               <MapPin className="size-4 mt-0.5 shrink-0" />
-              <span>{addressLabel}<br />{addressHint}</span>
+              <span className="space-y-0.5">
+                <p className="text-footer-foreground/80"><span className="text-footer-foreground/60 text-xs">Οδός:</span> {addressLabel}</p>
+                <p className="text-footer-foreground/80"><span className="text-footer-foreground/60 text-xs">Περιοχή:</span> Νέο Ηράκλειο</p>
+                <p className="text-footer-foreground/80"><span className="text-footer-foreground/60 text-xs">Τ.Κ.:</span> 14121</p>
+                <a
+                  href="https://www.google.com/maps/dir/?api=1&destination=%CE%91%CF%80%CF%8C%CE%BB%CE%BB%CF%89%CE%BD%CE%BF%CF%82+30+%CE%9D%CE%AD%CE%BF+%CE%97%CF%81%CE%AC%CE%BA%CE%BB%CE%B5%CE%B9%CE%BF+%CE%91%CE%B8%CE%AE%CE%BD%CE%B1+14121"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-1.5 text-xs text-footer-foreground/60 hover:text-footer-foreground mt-2 transition-colors"
+                >
+                  <ExternalLink className="size-3" />
+                  Άνοιγμα στους Χάρτες
+                </a>
+              </span>
             </li>
             <li className="flex gap-3">
               <Phone className="size-4 mt-0.5 shrink-0" />
@@ -98,8 +112,11 @@ export function SiteFooter() {
         </div>
       </div>
       <div className="border-t border-footer-foreground/10">
-        <div className="container-page py-5 text-xs text-footer-foreground/60 flex flex-col sm:flex-row justify-between gap-3">
-          <span>© {new Date().getFullYear()} {copyright}</span>
+        <div className="container-page py-4 sm:py-5 text-xs text-footer-foreground/60 flex flex-col sm:flex-row justify-between gap-3">
+          <span className="flex flex-col sm:flex-row sm:gap-1">
+            <span>© {new Date().getFullYear()} {copyright}</span>
+            <span>Website designed &amp; developed by <a href="https://www.aionweb.gr" target="_blank" rel="noopener noreferrer" class="hover:text-footer-foreground">AION WEB</a>.</span>
+          </span>
           <div className="flex gap-5">
             {pageVisibility['/privacy'] !== false && <Link to="/privacy" className="hover:text-footer-foreground">Πολιτική Απορρήτου</Link>}
             {pageVisibility['/terms'] !== false && <Link to="/terms" className="hover:text-footer-foreground">Όροι Χρήσης</Link>}

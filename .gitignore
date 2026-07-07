@@ -33,3 +33,6 @@ dist-ssr
 *.sw?
 .vercel
 .env*
+
+# Local-only reference (never commit)
+AGENTS.md

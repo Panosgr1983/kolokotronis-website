@@ -23,7 +23,7 @@ function AboutPage() {
   const { data: credentials = [], isLoading: credsLoading } = useCredentials();
   const aboutPage = usePageData()["/about"] || {};
 
-  const heroEyebrow = (useSiteSetting("about_hero_eyebrow") as string) || "Σχετικά";
+  const heroEyebrow = (useSiteSetting("about_hero_eyebrow") as string) || "Βιογραφικό";
   const heroTitle = (useSiteSetting("about_hero_title") as string) || aboutPage.title || "Η ιστορία, η φιλοσοφία & η διαδρομή μου";
   const heroSubtitle = (useSiteSetting("about_hero_subtitle") as string) || aboutPage.subtitle || "Γνωρίστε με λίγα λόγια το ποιος είμαι και τι με οδήγησε σε αυτή τη δουλειά.";
   const heroImage = (useSiteSetting("about_hero_image") as string) || aboutPage.hero_image || "";
@@ -59,22 +59,22 @@ function AboutPage() {
     <PageShell>
       {heroImage ? (
         <section
-          className="relative aspect-[2.35/1] min-h-[350px] bg-fixed bg-top bg-cover"
+          className="relative aspect-[2.35/1] min-h-[350px] bg-fixed sm:bg-top bg-center bg-cover"
           style={{ backgroundImage: `url(${heroImage})` }}
         >
           <div className="absolute inset-0 bg-gradient-to-t from-background via-background/50 to-background/20" />
           <div className="absolute inset-0 bg-black/40" />
-          <div className="absolute bottom-0 left-0 right-0 container-page pb-12 md:pb-16">
+          <div className="absolute bottom-0 left-0 right-0 container-page pb-8 sm:pb-12 md:pb-16">
             <div className="max-w-3xl">
               {heroPositioning && (
-                <p className="text-xs tracking-[0.25em] uppercase text-white/70 mb-4">{heroPositioning}</p>
+                <p className="text-xs tracking-[0.25em] uppercase text-white/70 mb-3 sm:mb-4">{heroPositioning}</p>
               )}
-              <h1 className="font-serif text-4xl md:text-5xl lg:text-6xl text-white leading-tight">{heroTitle}</h1>
+              <h1 className="font-serif text-3xl sm:text-4xl md:text-5xl lg:text-6xl text-white leading-tight">{heroTitle}</h1>
               {heroSubtitle && (
-                <p className="mt-4 text-base md:text-lg text-white/80 max-w-xl leading-relaxed">{heroSubtitle}</p>
+                <p className="mt-3 sm:mt-4 text-sm sm:text-base md:text-lg text-white/80 max-w-xl leading-relaxed">{heroSubtitle}</p>
               )}
               {heroEyebrow && (
-                <p className="text-xs tracking-[0.2em] uppercase text-primary-light mt-4">{heroEyebrow}</p>
+                <p className="text-xs tracking-[0.2em] uppercase text-primary-light mt-3 sm:mt-4">{heroEyebrow}</p>
               )}
             </div>
           </div>
@@ -89,7 +89,7 @@ function AboutPage() {
 
       {achievements.length > 0 && (
         <section className="border-b border-border">
-          <div className="container-page py-10 md:py-14">
+          <div className="container-page py-8 sm:py-10 md:py-14">
             <div className="grid grid-cols-2 md:grid-cols-4 gap-8 md:gap-12">
               {achievements.map((a, i) => {
                 const Icon = ACHIEVEMENT_ICONS[a.icon] || AwardIcon;
@@ -108,8 +108,8 @@ function AboutPage() {
         </section>
       )}
 
-      <section className="container-page py-16 md:py-20">
-        <div className="grid lg:grid-cols-5 gap-12 items-start">
+      <section className="container-page py-12 sm:py-16 md:py-20">
+        <div className="grid lg:grid-cols-5 gap-8 sm:gap-12 items-start">
           <div className="lg:col-span-2">
             <div className="sticky top-24">
               {portraitImage ? (
@@ -120,14 +120,14 @@ function AboutPage() {
             </div>
           </div>
           <div className="lg:col-span-3">
-            <p className="text-xs tracking-[0.25em] uppercase text-primary mb-4">{bioEyebrow}</p>
-            <h2 className="font-serif text-3xl md:text-4xl mb-6">{bioTitle}</h2>
+            <p className="text-xs tracking-[0.25em] uppercase text-primary mb-3 sm:mb-4">{bioEyebrow}</p>
+            <h2 className="font-serif text-2xl sm:text-3xl md:text-4xl mb-4 sm:mb-6">{bioTitle}</h2>
             <div className="prose prose-neutral max-w-none text-muted-foreground leading-relaxed space-y-4">
               {paragraphs.map((p, i) => (
                 <div key={i}>
                   {i === insertQuoteIdx && pullQuote && (
-                    <aside className="my-8 pl-6 border-l-2 border-primary py-2">
-                      <p className="font-serif text-xl md:text-2xl text-foreground leading-relaxed italic">&ldquo;{pullQuote}&rdquo;</p>
+                    <aside className="my-6 sm:my-8 pl-6 border-l-2 border-primary py-2">
+                      <p className="font-serif text-lg sm:text-xl md:text-2xl text-foreground leading-relaxed italic">&ldquo;{pullQuote}&rdquo;</p>
                       {pullQuoteAuthor && (
                         <p className="text-sm text-muted-foreground mt-2">&mdash; {pullQuoteAuthor}</p>
                       )}
@@ -150,8 +150,8 @@ function AboutPage() {
       </section>
 
       <section className="border-y border-border">
-        <div className="container-page py-16 md:py-20">
-          <h2 className="font-serif text-3xl md:text-4xl mb-10">{credsTitle}</h2>
+        <div className="container-page py-12 sm:py-16 md:py-20">
+          <h2 className="font-serif text-2xl sm:text-3xl md:text-4xl mb-8 sm:mb-10">{credsTitle}</h2>
           {credsLoading ? (
             <div className="flex justify-center py-10"><div className="size-8 border-2 border-primary/30 border-t-primary rounded-full animate-spin" /></div>
           ) : (
@@ -172,9 +172,9 @@ function AboutPage() {
 
       {books.length > 0 && pageVisibility['/books'] !== false && (
         <section className="border-y border-border">
-          <div className="container-page py-16 md:py-20">
-            <div className="flex items-end justify-between mb-10 flex-wrap gap-4">
-              <h2 className="font-serif text-3xl md:text-4xl">Συγγραφικό Έργο</h2>
+          <div className="container-page py-12 sm:py-16 md:py-20">
+            <div className="flex items-end justify-between mb-8 sm:mb-10 flex-wrap gap-4">
+              <h2 className="font-serif text-2xl sm:text-3xl md:text-4xl">Συγγραφικό Έργο</h2>
               {booksCtaText && booksCtaUrl && (
                 <Link to={booksCtaUrl} className="text-primary text-xs tracking-[0.2em] uppercase font-medium inline-flex items-center gap-2 hover:gap-3 transition-all">
                   {booksCtaText} <ArrowRight className="size-4" />
@@ -233,7 +233,7 @@ function AboutPage() {
         </section>
       )}
 
-      <div className="py-8" />
+      <div className="py-4 sm:py-8" />
 
       <ValuesBand />
 

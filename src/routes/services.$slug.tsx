@@ -39,26 +39,26 @@ function ServiceDetailPage() {
   return (
     <PageShell>
       <div
-        className="relative aspect-[2.35/1] min-h-[300px] bg-fixed bg-top bg-cover"
+        className="relative aspect-[2.35/1] min-h-[300px] bg-fixed sm:bg-top bg-center bg-cover"
         style={(service.image_url || svcPageData.hero_image) ? { backgroundImage: `url(${service.image_url || svcPageData.hero_image})` } : undefined}
       >
         <div className="absolute inset-0 bg-gradient-to-t from-background via-background/40 to-transparent" />
-        <div className="absolute bottom-0 left-0 right-0 container-page pb-10">
-          <Link to="/services" className="inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors mb-4">
+        <div className="absolute bottom-0 left-0 right-0 container-page pb-6 sm:pb-10">
+          <Link to="/services" className="inline-flex items-center gap-1.5 text-xs sm:text-sm text-muted-foreground hover:text-foreground transition-colors mb-3 sm:mb-4">
             <ArrowLeft size={14} /> Πίσω στις υπηρεσίες
           </Link>
-          <div className="flex items-center gap-4 mb-4">
-            <div className="size-14 rounded-2xl bg-primary/10 text-primary flex items-center justify-center">
-              <Icon className="size-7" strokeWidth={1.5} />
+          <div className="flex items-center gap-3 sm:gap-4 mb-4">
+            <div className="size-10 sm:size-14 rounded-xl sm:rounded-2xl bg-primary/10 text-primary flex items-center justify-center shrink-0">
+              <Icon className="size-5 sm:size-7" strokeWidth={1.5} />
             </div>
-            <h1 className="font-serif text-3xl md:text-5xl lg:text-6xl text-foreground max-w-3xl leading-tight">{service.title}</h1>
+            <h1 className="font-serif text-xl sm:text-3xl md:text-5xl lg:text-6xl text-foreground max-w-3xl leading-tight">{service.title}</h1>
           </div>
         </div>
       </div>
 
       <section className="container-page py-12 md:py-16">
         <div className="max-w-3xl mx-auto">
-          <p className="text-lg text-muted-foreground leading-relaxed mb-10">
+          <p className="text-base sm:text-lg text-muted-foreground leading-relaxed mb-6 sm:mb-10">
             {service.short_description}
           </p>
 
@@ -68,7 +68,7 @@ function ServiceDetailPage() {
             ))}
           </div>
 
-          <div className="mt-12 pt-10 border-t border-border">
+          <div className="mt-8 sm:mt-12 pt-6 sm:pt-10 border-t border-border">
             <Link to="/contact" className="btn-cta inline-flex items-center gap-2">
               <Calendar className="size-4" /> Κλείστε ραντεβού
             </Link>

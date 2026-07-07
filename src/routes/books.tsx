@@ -36,8 +36,8 @@ function BooksPage() {
     <PageShell>
       <PageHero title={heroTitle} subtitle={heroSubtitle} backgroundImage={booksPage.hero_image} />
 
-      <section className="container-page py-16 md:py-20">
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-10">
+      <section className="container-page py-12 sm:py-16 md:py-20">
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 md:gap-10">
           {books.map((b, i) => (
             <div key={i} className="flex flex-col card-soft p-6 group">
               <div className="aspect-[3/4] rounded-xl overflow-hidden bg-gradient-to-br from-primary/10 to-secondary mb-5">
