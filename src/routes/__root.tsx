@@ -14,7 +14,6 @@ import { Toaster } from "sonner";
 import { usePageviewTracking } from "../lib/analytics";
 import { supabase } from "../lib/supabase";
 import { TENANT_ID } from "../lib/content-hooks";
-import { useBranding } from "../lib/core-hooks";
 
 import appCss from "../styles.css?url";
 
@@ -77,21 +76,36 @@ function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
 
 export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()({
   beforeLoad: async ({ context: { queryClient } }) => {
-    await queryClient.prefetchQuery({
-      queryKey: ["site_settings"],
-      queryFn: async () => {
-        const { data } = await supabase
-          .from("site_settings")
-          .select("key, value")
-          .eq("tenant_id", TENANT_ID);
-        if (!data) return {};
-        return data.reduce<Record<string, unknown>>((acc, s) => {
-          acc[s.key] = s.value;
-          return acc;
-        }, {});
-      },
-      staleTime: 30 * 1000,
-    });
+    await Promise.all([
+      queryClient.prefetchQuery({
+        queryKey: ["site_settings"],
+        queryFn: async () => {
+          const { data } = await supabase
+            .from("site_settings")
+            .select("key, value")
+            .eq("tenant_id", TENANT_ID);
+          if (!data) return {};
+          return data.reduce<Record<string, unknown>>((acc, s) => {
+            acc[s.key] = s.value;
+            return acc;
+          }, {});
+        },
+        staleTime: 30 * 1000,
+      }),
+      queryClient.prefetchQuery({
+        queryKey: ["core_entity", "branding"],
+        queryFn: async () => {
+          const { data } = await supabase
+            .from("core_entities")
+            .select("data, version, updated_at")
+            .eq("tenant_id", TENANT_ID)
+            .eq("entity_type", "branding")
+            .single();
+          return data || null;
+        },
+        staleTime: 30 * 1000,
+      }),
+    ]);
   },
   head: () => ({
     meta: [
@@ -139,8 +153,8 @@ function RootShell({ children }: { children: React.ReactNode }) {
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
   usePageviewTracking();
-  const branding = useBranding();
-  const favicon = branding.favicon || "/logo.png";
+  const branding = queryClient.getQueryData<{data?: {favicon?: string}}>(["core_entity", "branding"]);
+  const favicon = branding?.data?.favicon || "/logo.png";
 
   useEffect(() => {
     const link = document.querySelector("link[rel*='icon']") || document.createElement("link");
