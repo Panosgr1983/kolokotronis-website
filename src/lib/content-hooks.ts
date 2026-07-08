@@ -21,6 +21,23 @@ export function useServices() {
   });
 }
 
+export function useBlogPostsByCategory(category: string) {
+  return useQuery({
+    queryKey: ["blog_posts", category],
+    queryFn: async () => {
+      const { data } = await supabase
+        .from("blog_posts")
+        .select("*")
+        .eq("tenant_id", TENANT_ID)
+        .eq("category", category)
+        .eq("is_published", true)
+        .order("published_at", { ascending: false });
+      return data ?? [];
+    },
+    staleTime: 5 * 60 * 1000,
+  });
+}
+
 export function useBlogPosts() {
   return useQuery({
     queryKey: ["blog_posts"],

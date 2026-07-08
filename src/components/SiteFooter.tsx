@@ -24,7 +24,7 @@ export function SiteFooter() {
     { label: "Βιογραφικό", path: "/about" },
     { label: "Υπηρεσίες", path: "/services" },
     { label: "Ομάδες", path: "/services/omades" },
-    { label: "Ομιλίες, Σεμινάρια", path: "/blog" },
+    { label: "Ομιλίες, Σεμινάρια", path: "/services/seminar-omilies" },
     { label: "Βιβλία", path: "/books" },
     { label: "Επικοινωνία", path: "/contact" },
   ]).filter(n => pageVisibility[n.path] !== false);

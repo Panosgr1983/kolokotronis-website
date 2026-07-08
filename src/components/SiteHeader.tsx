@@ -2,15 +2,17 @@ import { Link } from "@tanstack/react-router";
 import { useState } from "react";
 import { Menu, X, Calendar } from "lucide-react";
 import { useSiteSetting } from "@/lib/content-hooks";
+import { useBranding } from "@/lib/core-hooks";
 
 interface NavLink { label: string; path: string; }
 
 export function SiteHeader() {
   const [open, setOpen] = useState(false);
-  const siteName = (useSiteSetting("site_name") as string) || "Νικολας Κολοκοτρωνης";
-  const subtitle = (useSiteSetting("site_subtitle") as string) || "Ψυχολογος";
-  const monogram = (useSiteSetting("site_monogram") as string) || "ΝΚ";
-  const logoUrl = (useSiteSetting("site_logo") as string) || "";
+  const branding = useBranding();
+  const siteName = branding.site_name || (useSiteSetting("site_name") as string) || "Νικολας Κολοκοτρωνης";
+  const subtitle = branding.site_subtitle || (useSiteSetting("site_subtitle") as string) || "Ψυχολογος";
+  const monogram = branding.monogram || (useSiteSetting("site_monogram") as string) || "ΝΚ";
+  const logoUrl = branding.logo || (useSiteSetting("site_logo") as string) || "";
   const navLinks = (useSiteSetting("nav_links") as NavLink[]) || [];
   const pageVisibility = (useSiteSetting("page_visibility") as Record<string, boolean>) || {};
   const ctaText = (useSiteSetting("header_cta_text") as string) || "Κλειστε ραντεβου";
@@ -21,7 +23,7 @@ export function SiteHeader() {
     { label: "Βιογραφικο", path: "/about" },
     { label: "Υπηρεσιες", path: "/services" },
     { label: "Ομαδες", path: "/services/omades" },
-    { label: "Ομιλιες, Σεμιναρια", path: "/blog" },
+    { label: "Ομιλιες, Σεμιναρια", path: "/services/seminar-omilies" },
     { label: "Βιβλια", path: "/books" },
     { label: "Επικοινωνια", path: "/contact" },
   ]).filter(n => pageVisibility[n.path] !== false);
