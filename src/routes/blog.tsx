@@ -16,6 +16,14 @@ export const Route = createFileRoute("/blog")({
   component: BlogPage,
 });
 
+const CATEGORIES = ["ΟΜΙΛΙΕΣ", "ΣΕΜΙΝΑΡΙΑ", "ΟΜΑΔΕΣ"];
+const CATEGORY_LABELS: Record<string, string> = {
+  "ΟΜΙΛΙΕΣ ΣΕΜΙΝΑΡΙΑ": "Ομιλίες, Σεμινάρια",
+  "ΟΜΙΛΙΕΣ": "Ομιλίες",
+  "ΣΕΜΙΝΑΡΙΑ": "Σεμινάρια",
+  "ΟΜΑΔΕΣ": "Ομάδες",
+};
+
 const monthsGR = ["Ιαν", "Φεβ", "Μαρ", "Απρ", "Μαϊ", "Ιουν", "Ιουλ", "Αυγ", "Σεπ", "Οκτ", "Νοε", "Δεκ"];
 
 function formatDate(dateStr: string | null) {
@@ -24,11 +32,23 @@ function formatDate(dateStr: string | null) {
   return `${d.getDate()} ${monthsGR[d.getMonth()]} ${d.getFullYear()}`;
 }
 
+function matchesCategory(post: { category: string | null }, filter: string | null): boolean {
+  if (!filter) return true;
+  const c = post.category || "";
+  if (filter === "ΟΜΙΛΙΕΣ ΣΕΜΙΝΑΡΙΑ") return c === "ΟΜΙΛΙΕΣ ΣΕΜΙΝΑΡΙΑ";
+  return c === filter;
+}
+
 function BlogPage() {
   const { data: posts = [], isLoading } = useBlogPosts();
-  const pathname = useRouterState({ select: (s) => s.location.pathname });
+  const { pathname, searchStr } = useRouterState({ select: (s) => ({ pathname: s.location.pathname, searchStr: s.location.search }) });
+  const activeCategory = new URLSearchParams(searchStr).get("category") || null;
   const isIndex = pathname === '/blog';
   const blogPage = usePageData()["/blog"] || {};
+
+  const filtered = activeCategory
+    ? posts.filter(p => matchesCategory(p, activeCategory))
+    : posts;
 
   if (!isIndex) return <Outlet />;
 
@@ -36,25 +56,80 @@ function BlogPage() {
     <PageShell>
       <PageHero
         eyebrow="Άρθρα"
-        title={blogPage.title || "Σκέψεις για την ψυχική υγεία"}
-        subtitle={blogPage.subtitle || "Άρθρα για την αυτογνωσία, τις σχέσεις και τη συνολική ευεξία."}
+        title={blogPage.title || "Ομιλίες, Σεμινάρια, Ομάδες"}
+        subtitle={blogPage.subtitle || "Άρθρα και σκέψεις για την ψυχική υγεία, την αυτογνωσία και την προσωπική ανάπτυξη."}
         backgroundImage={blogPage.hero_image}
       />
 
       <section className="container-page py-12 sm:py-16 md:py-20">
+        <div className="flex flex-wrap items-center gap-2 sm:gap-3 mb-8 sm:mb-10">
+          <Link
+            to="/blog"
+            className={`text-xs tracking-[0.2em] uppercase px-4 py-2 rounded-full border transition-colors ${
+              !activeCategory
+                ? "bg-primary text-primary-foreground border-primary"
+                : "border-border text-muted-foreground hover:text-foreground hover:border-foreground/30"
+            }`}
+          >
+            Ολα
+          </Link>
+          {CATEGORIES.map((cat) => {
+            const isSingle = cat === "ΟΜΙΛΙΕΣ" || cat === "ΣΕΜΙΝΑΡΙΑ";
+            if (isSingle) {
+              const combinedCat = "ΟΜΙΛΙΕΣ ΣΕΜΙΝΑΡΙΑ";
+              return (
+                <Link
+                  key={cat}
+                  to="/blog"
+                  search={{ category: combinedCat }}
+                  className={`text-xs tracking-[0.2em] uppercase px-4 py-2 rounded-full border transition-colors ${
+                    activeCategory === combinedCat
+                      ? "bg-primary text-primary-foreground border-primary"
+                      : "border-border text-muted-foreground hover:text-foreground hover:border-foreground/30"
+                  }`}
+                >
+                  {CATEGORY_LABELS[cat]}
+                </Link>
+              );
+            }
+            const catPosts = posts.filter(p => matchesCategory(p, cat));
+            if (catPosts.length === 0) return null;
+            return (
+              <Link
+                key={cat}
+                to="/blog"
+                search={{ category: cat }}
+                className={`text-xs tracking-[0.2em] uppercase px-4 py-2 rounded-full border transition-colors ${
+                  activeCategory === cat
+                    ? "bg-primary text-primary-foreground border-primary"
+                    : "border-border text-muted-foreground hover:text-foreground hover:border-foreground/30"
+                }`}
+              >
+                {CATEGORY_LABELS[cat]}
+              </Link>
+            );
+          })}
+        </div>
+
         {isLoading ? (
           <div className="flex justify-center py-20"><div className="size-8 border-2 border-primary/30 border-t-primary rounded-full animate-spin" /></div>
         ) : (
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-7">
-            {posts.length === 0 && (
-              <div className="col-span-full text-center py-20 text-muted-foreground">Δεν υπάρχουν ακόμα άρθρα.</div>
+            {filtered.length === 0 && (
+              <div className="col-span-full text-center py-20 text-muted-foreground">Δεν υπάρχουν άρθρα σε αυτή την κατηγορία.</div>
             )}
-            {posts.map((p) => (
+            {filtered.map((p) => (
               <Link key={p.id} to={`/blog/${p.slug}`} className="card-soft overflow-hidden flex flex-col group">
-                {p.image_url && <img src={p.image_url} alt={p.title} width={1024} height={768} loading="lazy" className="aspect-[4/3] w-full object-cover group-hover:scale-105 transition-transform duration-500" />}
+                {p.image_url ? (
+                  <img src={p.image_url} alt={p.title} width={1024} height={768} loading="lazy" className="aspect-[4/3] w-full object-cover group-hover:scale-105 transition-transform duration-500" />
+                ) : (
+                  <div className="aspect-[4/3] w-full bg-primary/5 flex items-center justify-center">
+                    <span className="font-serif text-5xl text-primary/30">{p.title[0]}</span>
+                  </div>
+                )}
                 <div className="p-6 flex flex-col flex-1">
                   <div className="flex items-center gap-3 text-xs uppercase tracking-wider text-muted-foreground mb-3">
-                    {p.category && <span className="text-primary font-medium">{p.category}</span>}
+                    {p.category && <span className="text-primary font-medium">{CATEGORY_LABELS[p.category] || p.category}</span>}
                     {p.category && <span>·</span>}
                     <span>{formatDate(p.published_at)}</span>
                   </div>
