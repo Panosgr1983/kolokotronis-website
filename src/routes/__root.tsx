@@ -105,6 +105,19 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
         },
         staleTime: 30 * 1000,
       }),
+      queryClient.prefetchQuery({
+        queryKey: ["core_entity", "business_information"],
+        queryFn: async () => {
+          const { data } = await supabase
+            .from("core_entities")
+            .select("data, version, updated_at")
+            .eq("tenant_id", TENANT_ID)
+            .eq("entity_type", "business_information")
+            .single();
+          return data || null;
+        },
+        staleTime: 30 * 1000,
+      }),
     ]);
   },
   head: () => ({

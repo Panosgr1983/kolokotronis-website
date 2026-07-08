@@ -1,5 +1,6 @@
 import { createFileRoute, Link, Outlet, useSearch, useRouterState } from "@tanstack/react-router";
 import { ArrowRight } from "lucide-react";
+import { useRef, useEffect } from "react";
 import { PageShell, PageHero } from "@/components/PageShell";
 import { useBlogPosts, usePageData } from "@/lib/content-hooks";
 
@@ -48,9 +49,28 @@ function matchesCategory(post: { category: string | null }, filter: string | nul
 function BlogPage() {
   const { data: posts = [], isLoading } = useBlogPosts();
   const pathname = useRouterState({ select: (s) => s.location.pathname });
-  const { category: activeCategory } = useSearch({ from: Route.id });
   const isIndex = pathname === '/blog';
   const blogPage = usePageData()["/blog"] || {};
+  const sectionRef = useRef<HTMLElement>(null);
+  const hasMountedRef = useRef(false);
+  const previousCategoryRef = useRef<string | undefined>(undefined);
+  const { category: activeCategory } = useSearch({ from: Route.id });
+
+  useEffect(() => {
+    if (!hasMountedRef.current) {
+      hasMountedRef.current = true;
+      previousCategoryRef.current = activeCategory;
+      return;
+    }
+
+    const didCategoryChange = previousCategoryRef.current !== activeCategory;
+    previousCategoryRef.current = activeCategory;
+
+    if (!didCategoryChange || !sectionRef.current) return;
+
+    const y = sectionRef.current.getBoundingClientRect().top + window.scrollY - 32;
+    window.scrollTo({ top: y, behavior: "smooth" });
+  }, [activeCategory]);
 
   const filtered = activeCategory
     ? posts.filter(p => matchesCategory(p, activeCategory))
@@ -67,7 +87,7 @@ function BlogPage() {
         backgroundImage={blogPage.hero_image}
       />
 
-      <section className="container-page py-12 sm:py-16 md:py-20">
+      <section ref={sectionRef} className="container-page py-12 sm:py-16 md:py-20">
         <div className="flex flex-wrap items-center gap-2 sm:gap-3 mb-8 sm:mb-10">
           <Link
             to="/blog"

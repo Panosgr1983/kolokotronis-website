@@ -63,21 +63,23 @@ function ContactPage() {
             </div>
           </div>
 
-          <div className="card-soft p-7 flex gap-5">
-            <span className="size-12 rounded-lg bg-primary/10 text-primary flex items-center justify-center shrink-0">
-              <Clock className="size-5" />
-            </span>
-            <div>
-              <p className="text-sm text-muted-foreground mb-1">{hoursLabel}</p>
-              <p className="text-foreground">{biz.hours.monday && <>Δευ: {biz.hours.monday}<br /></>}</p>
-              <p className="text-foreground">{biz.hours.tuesday && <>Τρ: {biz.hours.tuesday}<br /></>}</p>
-              <p className="text-foreground">{biz.hours.wednesday && <>Τετ: {biz.hours.wednesday}<br /></>}</p>
-              <p className="text-foreground">{biz.hours.thursday && <>Πεμ: {biz.hours.thursday}<br /></>}</p>
-              <p className="text-foreground">{biz.hours.friday && <>Παρ: {biz.hours.friday}<br /></>}</p>
-              <p className="text-foreground">{biz.hours.saturday && <>Σαβ: {biz.hours.saturday}<br /></>}</p>
-              <p className="text-foreground">{biz.hours.sunday && <>Κυρ: {biz.hours.sunday}</>}</p>
+          {biz.hours.visible !== false && (
+            <div className="card-soft p-7 flex gap-5">
+              <span className="size-12 rounded-lg bg-primary/10 text-primary flex items-center justify-center shrink-0">
+                <Clock className="size-5" />
+              </span>
+              <div>
+                <p className="text-sm text-muted-foreground mb-1">{hoursLabel}</p>
+                <p className="text-foreground">{biz.hours.monday && <>Δευ: {biz.hours.monday}<br /></>}</p>
+                <p className="text-foreground">{biz.hours.tuesday && <>Τρ: {biz.hours.tuesday}<br /></>}</p>
+                <p className="text-foreground">{biz.hours.wednesday && <>Τετ: {biz.hours.wednesday}<br /></>}</p>
+                <p className="text-foreground">{biz.hours.thursday && <>Πεμ: {biz.hours.thursday}<br /></>}</p>
+                <p className="text-foreground">{biz.hours.friday && <>Παρ: {biz.hours.friday}<br /></>}</p>
+                <p className="text-foreground">{biz.hours.saturday && <>Σαβ: {biz.hours.saturday}<br /></>}</p>
+                <p className="text-foreground">{biz.hours.sunday && <>Κυρ: {biz.hours.sunday}</>}</p>
+              </div>
             </div>
-          </div>
+          )}
 
           {biz.social.facebook && (
             <div className="card-soft p-7 flex gap-5">

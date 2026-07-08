@@ -39,6 +39,7 @@ export interface BusinessSocial {
 }
 
 export interface BusinessHours {
+  visible?: boolean;
   monday: string;
   tuesday: string;
   wednesday: string;
@@ -92,6 +93,7 @@ const defaultBusinessInfo: BusinessInformation = {
     threads: "",
   },
   hours: {
+    visible: true,
     monday: "10:00 – 20:00",
     tuesday: "10:00 – 20:00",
     wednesday: "10:00 – 20:00",
@@ -103,5 +105,12 @@ const defaultBusinessInfo: BusinessInformation = {
 };
 
 export function useBusinessInfo(): BusinessInformation {
-  return useCoreEntityData('business_information', defaultBusinessInfo);
+  const raw = useCoreEntityData<any>('business_information', defaultBusinessInfo);
+  return {
+    address: { ...defaultBusinessInfo.address, ...(raw.address || {}) },
+    contact: { ...defaultBusinessInfo.contact, ...(raw.contact || {}) },
+    maps: { ...defaultBusinessInfo.maps, ...(raw.maps || {}) },
+    social: { ...defaultBusinessInfo.social, ...(raw.social || {}) },
+    hours: { ...defaultBusinessInfo.hours, ...(raw.hours || {}) },
+  };
 }
