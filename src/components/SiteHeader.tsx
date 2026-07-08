@@ -9,10 +9,14 @@ interface NavLink { label: string; path: string; }
 export function SiteHeader() {
   const [open, setOpen] = useState(false);
   const branding = useBranding();
-  const siteName = branding.site_name || (useSiteSetting("site_name") as string) || "Νικολας Κολοκοτρωνης";
-  const subtitle = branding.site_subtitle || (useSiteSetting("site_subtitle") as string) || "Ψυχολογος";
-  const monogram = branding.monogram || (useSiteSetting("site_monogram") as string) || "ΝΚ";
-  const logoUrl = branding.logo || (useSiteSetting("site_logo") as string) || "";
+  const setting_siteName = useSiteSetting("site_name") as string;
+  const setting_subtitle = useSiteSetting("site_subtitle") as string;
+  const setting_monogram = useSiteSetting("site_monogram") as string;
+  const setting_logo = useSiteSetting("site_logo") as string;
+  const siteName = branding.site_name || setting_siteName || "Νικολας Κολοκοτρωνης";
+  const subtitle = branding.site_subtitle || setting_subtitle || "Ψυχολογος";
+  const monogram = branding.monogram || setting_monogram || "ΝΚ";
+  const logoUrl = branding.logo || setting_logo || "";
   const navLinks = (useSiteSetting("nav_links") as NavLink[]) || [];
   const pageVisibility = (useSiteSetting("page_visibility") as Record<string, boolean>) || {};
   const ctaText = (useSiteSetting("header_cta_text") as string) || "Κλειστε ραντεβου";
