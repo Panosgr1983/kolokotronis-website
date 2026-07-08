@@ -1,10 +1,16 @@
-import { createFileRoute, Link, Outlet } from "@tanstack/react-router";
-import { useRouterState } from "@tanstack/react-router";
+import { createFileRoute, Link, Outlet, useSearch, useRouterState } from "@tanstack/react-router";
 import { ArrowRight } from "lucide-react";
 import { PageShell, PageHero } from "@/components/PageShell";
 import { useBlogPosts, usePageData } from "@/lib/content-hooks";
 
+interface BlogSearch {
+  category?: string;
+}
+
 export const Route = createFileRoute("/blog")({
+  validateSearch: (s: Record<string, unknown>): BlogSearch => ({
+    category: typeof s.category === "string" ? s.category : undefined,
+  }),
   head: () => ({
     meta: [
       { title: "Άρθρα — Ψυχολογία & Αυτογνωσία | Ν. Κολοκοτρώνης" },
@@ -41,8 +47,8 @@ function matchesCategory(post: { category: string | null }, filter: string | nul
 
 function BlogPage() {
   const { data: posts = [], isLoading } = useBlogPosts();
-  const { pathname, searchStr } = useRouterState({ select: (s) => ({ pathname: s.location.pathname, searchStr: s.location.search }) });
-  const activeCategory = new URLSearchParams(searchStr).get("category") || null;
+  const pathname = useRouterState({ select: (s) => s.location.pathname });
+  const { category: activeCategory } = useSearch({ from: Route.id });
   const isIndex = pathname === '/blog';
   const blogPage = usePageData()["/blog"] || {};
 
