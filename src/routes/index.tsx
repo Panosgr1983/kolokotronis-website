@@ -4,7 +4,7 @@ import { PageShell } from "@/components/PageShell";
 import { CtaBand } from "@/components/CtaBand";
 import { ValuesBand } from "@/components/ValuesBand";
 import { ContactForm } from "@/components/ContactForm";
-import { useServices, useBlogPosts, useTestimonials, useSiteSetting, usePageData, useBlogPostsByCategory } from "@/lib/content-hooks";
+import { useServices, useTestimonials, useSiteSetting, usePageData, useBlogPostsByCategory } from "@/lib/content-hooks";
 import { useBusinessInfo } from "@/lib/business-info";
 import { getIcon } from "@/lib/icon-map";
 
@@ -127,7 +127,7 @@ function ContactSection() {
 
 function HomePage() {
   const { data: services = [], isLoading: servicesLoading } = useServices();
-  const { data: blogPosts = [], isLoading: blogLoading } = useBlogPosts();
+
   const { data: testimonials = [], isLoading: testimonialsLoading } = useTestimonials();
   const homePage = usePageData()["/"] || {};
 
@@ -156,10 +156,18 @@ function HomePage() {
   const seminarSectionCtaText = (useSiteSetting("seminar_section_cta_text") as string) || "Δείτε όλες τις ομιλίες & σεμινάρια";
   const seminarSectionCtaLink = (useSiteSetting("seminar_section_cta_link") as string) || "/blog?category=ΟΜΙΛΙΕΣ+ΣΕΜΙΝΑΡΙΑ";
   const seminarSectionCount = Number(useSiteSetting("seminar_section_count")) || 2;
-  const seminarSectionCategory = (useSiteSetting("seminar_section_category") as string) || "ΟΜΙΛΙΕΣ ΣΕΜΙΝΑΡΙΑ";
+  const rawCategory = useSiteSetting("seminar_section_category");
+  const seminarSectionCategory = rawCategory !== null && rawCategory !== undefined ? String(rawCategory) : "ΟΜΙΛΙΕΣ ΣΕΜΙΝΑΡΙΑ";
   const { data: seminarPosts = [], isLoading: seminarLoading } = useBlogPostsByCategory(seminarSectionCategory);
-  const blogSectionTitle = (useSiteSetting("blog_section_title") as string) || "Πρόσφατα Άρθρα";
-  const blogSectionLinkText = (useSiteSetting("blog_section_link_text") as string) || "Δειτε ολα τα αρθρα";
+  const blogHomeSectionVisible = (useSiteSetting("blog_home_section_visible") as string) !== "false";
+  const rawBlogHomeCategory = useSiteSetting("blog_home_section_category");
+  const blogHomeSectionCategory = rawBlogHomeCategory !== null && rawBlogHomeCategory !== undefined ? String(rawBlogHomeCategory) : "";
+  const { data: blogHomePosts = [], isLoading: blogHomeLoading } = useBlogPostsByCategory(blogHomeSectionCategory);
+  const blogHomeSectionTitle = (useSiteSetting("blog_home_section_title") as string) || "Πρόσφατα Άρθρα";
+  const blogHomeSectionSubtitle = (useSiteSetting("blog_home_section_subtitle") as string) || "Διαβάστε τα πιο πρόσφατα άρθρα και ενημερώσεις.";
+  const blogHomeSectionCtaText = (useSiteSetting("blog_home_section_cta_text") as string) || "Δείτε όλα τα άρθρα";
+  const blogHomeSectionCtaLink = (useSiteSetting("blog_home_section_cta_link") as string) || "/blog";
+  const blogHomeSectionCount = Number(useSiteSetting("blog_home_section_count")) || 2;
 
   const headlineParts = heroHeading.split("\n");
 
@@ -311,32 +319,47 @@ function HomePage() {
         </section>
       )}
 
-      <section className="container-page py-14 sm:py-20 md:py-24">
-        <div className="flex items-end justify-between mb-8 sm:mb-12 flex-wrap gap-4">
-          <h2 className="font-serif text-2xl sm:text-3xl md:text-4xl">{blogSectionTitle}</h2>
-          <Link to="/blog" className="text-primary text-xs tracking-[0.2em] uppercase font-medium inline-flex items-center gap-2 hover:gap-3 transition-all">
-            {blogSectionLinkText} <ArrowRight className="size-4" />
-          </Link>
-        </div>
-        {blogLoading ? (
-          <div className="flex justify-center"><div className="size-8 border-2 border-primary/30 border-t-primary rounded-full animate-spin" /></div>
-        ) : (
-          <div className="grid md:grid-cols-3 gap-7">
-            {blogPosts.slice(0, 3).map((p) => (
-              <Link key={p.id} to={`/blog/${p.slug}`} className="card-soft overflow-hidden group">
-                {p.image_url && <img src={p.image_url} alt={p.title} width={1024} height={768} loading="lazy" className="aspect-[4/3] w-full object-cover group-hover:scale-105 transition-transform duration-500" />}
-                <div className="p-6">
-                  <p className="text-xs uppercase tracking-[0.18em] text-muted-foreground mb-3">{p.published_at ? new Date(p.published_at).toLocaleDateString("el-GR", { year: "numeric", month: "short", day: "numeric" }) : ""}</p>
-                  <h3 className="font-serif text-xl leading-snug mb-4">{p.title}</h3>
-                  <span className="text-xs tracking-[0.18em] uppercase text-primary font-medium inline-flex items-center gap-1.5 group-hover:gap-2.5 transition-all">
-                    Διαβαστε περισσοτερα <ArrowRight className="size-3.5" />
-                  </span>
-                </div>
+      {blogHomeSectionVisible && blogHomePosts.length > 0 && (
+        <section className="bg-secondary/30 border-y border-border">
+          <div className="container-page py-14 sm:py-20 md:py-24">
+            <div className="flex items-end justify-between mb-8 sm:mb-12 flex-wrap gap-4">
+              <div>
+                <h2 className="font-serif text-2xl sm:text-3xl md:text-4xl">{blogHomeSectionTitle}</h2>
+                {blogHomeSectionSubtitle && (
+                  <p className="text-muted-foreground mt-2 max-w-xl text-sm sm:text-base">{blogHomeSectionSubtitle}</p>
+                )}
+              </div>
+              <Link to={blogHomeSectionCtaLink} className="text-primary text-xs tracking-[0.2em] uppercase font-medium inline-flex items-center gap-2 hover:gap-3 transition-all">
+                {blogHomeSectionCtaText} <ArrowRight className="size-4" />
               </Link>
-            ))}
+            </div>
+            {blogHomeLoading ? (
+              <div className="flex justify-center"><div className="size-8 border-2 border-primary/30 border-t-primary rounded-full animate-spin" /></div>
+            ) : (
+              <div className="grid md:grid-cols-2 gap-7 max-w-2xl">
+                {blogHomePosts.slice(0, blogHomeSectionCount).map((p) => (
+                  <Link key={p.id} to={`/blog/${p.slug}`} className="card-soft overflow-hidden group">
+                    {p.image_url ? (
+                      <img src={p.image_url} alt={p.title} width={1024} height={768} loading="lazy" className="aspect-[4/3] w-full object-cover group-hover:scale-105 transition-transform duration-500" />
+                    ) : (
+                      <div className="aspect-[4/3] w-full bg-primary/5 flex items-center justify-center">
+                        <span className="font-serif text-5xl text-primary/30">{p.title[0]}</span>
+                      </div>
+                    )}
+                    <div className="p-6">
+                      <p className="text-xs uppercase tracking-[0.18em] text-muted-foreground mb-3">{p.published_at ? new Date(p.published_at).toLocaleDateString("el-GR", { year: "numeric", month: "short", day: "numeric" }) : ""}</p>
+                      <h3 className="font-serif text-xl leading-snug mb-4">{p.title}</h3>
+                      <span className="text-xs tracking-[0.18em] uppercase text-primary font-medium inline-flex items-center gap-1.5 group-hover:gap-2.5 transition-all">
+                        Διαβαστε περισσοτερα <ArrowRight className="size-3.5" />
+                      </span>
+                    </div>
+                  </Link>
+                ))}
+              </div>
+            )}
           </div>
-        )}
-      </section>
+        </section>
+      )}
 
       <ContactSection />
     </PageShell>

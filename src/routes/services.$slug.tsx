@@ -27,7 +27,8 @@ function ServiceDetailPage() {
   const { data: service, isLoading } = useServiceBySlug(slug);
   const svcPageData = usePageData()[`/services/${slug}`] || {};
   const blogCategory = CATEGORY_MAP[slug];
-  const { data: relatedPosts = [] } = useBlogPostsByCategory(blogCategory || "");
+  const showRelatedArticles = !!blogCategory;
+  const { data: relatedPosts = [] } = useBlogPostsByCategory(blogCategory || "", { showOnServicePage: true, enabled: showRelatedArticles });
 
   if (isLoading) {
     return (
@@ -91,7 +92,7 @@ function ServiceDetailPage() {
         </div>
       </section>
 
-      {relatedPosts.length > 0 && (
+      {showRelatedArticles && relatedPosts.length > 0 && (
         <section className="border-t border-border mt-12 sm:mt-16 pt-10 sm:pt-14 pb-10 sm:pb-14">
           <div className="container-page">
             <h2 className="font-serif text-2xl sm:text-3xl mb-8 text-center">

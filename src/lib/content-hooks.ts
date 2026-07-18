@@ -21,19 +21,25 @@ export function useServices() {
   });
 }
 
-export function useBlogPostsByCategory(category: string) {
+export function useBlogPostsByCategory(category: string, options?: { showOnServicePage?: boolean; enabled?: boolean }) {
   return useQuery({
-    queryKey: ["blog_posts", category],
+    queryKey: ["blog_posts", category, options?.showOnServicePage],
     queryFn: async () => {
-      const { data } = await supabase
+      let query = supabase
         .from("blog_posts")
         .select("*")
         .eq("tenant_id", TENANT_ID)
-        .eq("category", category)
-        .eq("is_published", true)
-        .order("published_at", { ascending: false });
+        .eq("is_published", true);
+      if (category) {
+        query = query.eq("category", category);
+      }
+      if (options?.showOnServicePage) {
+        query = query.eq("show_on_service_page", true);
+      }
+      const { data } = await query.order("published_at", { ascending: false });
       return data ?? [];
     },
+    enabled: options?.enabled ?? true,
     staleTime: 5 * 60 * 1000,
   });
 }
