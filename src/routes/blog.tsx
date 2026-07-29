@@ -81,7 +81,7 @@ function BlogPage() {
   return (
     <PageShell>
       <PageHero
-        eyebrow="Άρθρα"
+        eyebrow={(useSiteSetting("blog_hero_eyebrow") as string) || "Ανακοινώσεις"}
         title={blogPage.title || "Ομιλίες, Σεμινάρια, Ομάδες"}
         subtitle={blogPage.subtitle || "Άρθρα και σκέψεις για την ψυχική υγεία, την αυτογνωσία και την προσωπική ανάπτυξη."}
         backgroundImage={blogPage.hero_image}
