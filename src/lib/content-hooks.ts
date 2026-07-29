@@ -229,7 +229,7 @@ export const CATEGORY_LABELS: Record<string, string> = {
 export function normalizeBlogCategory(cat: string | null | undefined): string | null {
   if (!cat) return null;
   const trimmed = cat.trim();
-  if (trimmed === "ΟΜΙΛΙΕΣ" || trimmed === "ΣΕΜΙΝΑΡΙΑ") return "ΟΜΙΛΙΕΣ ΣΕΜΙΝΑΡΙΑ";
+  if (trimmed === "ΟΜΙΛΙΕΣ" || trimmed === "ΣΕΜΙΝΑΡΙΑ" || trimmed === "ΟΜΙΛΙΕΣ & ΣΕΜΙΝΑΡΙΑ") return "ΟΜΙΛΙΕΣ ΣΕΜΙΝΑΡΙΑ";
   return trimmed;
 }
 
