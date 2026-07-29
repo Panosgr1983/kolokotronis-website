@@ -28,6 +28,7 @@ function ServiceDetailPage() {
   const announcementShowDates = (useSiteSetting("announcement_show_dates") as string) === "true";
   const { data: faqData } = useServiceFaq(slug);
   const faqEntries = faqData ?? [];
+  const serviceFaqVisible = (useSiteSetting("service_faq_visible") as string) === "true";
 
   if (isLoading) {
     return (
@@ -105,7 +106,7 @@ function ServiceDetailPage() {
         </div>
       </section>
 
-      {faqEntries.length > 0 && (
+      {faqEntries.length > 0 && serviceFaqVisible && (
         <section className="border-t border-border py-14 sm:py-20 md:py-24">
           <div className="container-page max-w-3xl mx-auto">
             <h2 className="font-serif text-2xl sm:text-3xl mb-8 text-center">Συχνές Ερωτήσεις</h2>
