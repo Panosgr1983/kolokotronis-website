@@ -2,7 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { ArrowLeft, ArrowRight, Calendar, ChevronDown } from "lucide-react";
 import { PageShell } from "@/components/PageShell";
 import { CtaBand } from "@/components/CtaBand";
-import { useServiceBySlug, usePageData, useRelatedArticles, useSiteSetting, isAnnouncementCategory, useServiceFaq } from "@/lib/content-hooks";
+import { useServiceBySlug, usePageData, useRelatedArticles, useSiteSetting, isAnnouncementCategory, useServiceFaq, renderTipContent } from "@/lib/content-hooks";
 import { getIcon } from "@/lib/icon-map";
 import { Accordion, AccordionItem, AccordionTrigger, AccordionContent } from "@/components/ui/accordion";
 
@@ -78,9 +78,17 @@ function ServiceDetailPage() {
           </p>
 
           <div className="prose prose-neutral max-w-none text-muted-foreground leading-relaxed">
-            {service.long_description.split("\n").map((p: string, i: number) => (
-              <p key={i} className="mb-5">{p}</p>
-            ))}
+            {(() => {
+              try {
+                const parsed = JSON.parse(service.long_description);
+                if (parsed && typeof parsed === "object" && parsed.type === "doc") {
+                  return <div className="prose-content" dangerouslySetInnerHTML={{ __html: renderTipContent(parsed) }} />;
+                }
+              } catch {}
+              return service.long_description.split("\n").map((p: string, i: number) => (
+                <p key={i} className="mb-5">{p}</p>
+              ));
+            })()}
           </div>
 
           <div className="mt-8 sm:mt-12 pt-6 sm:pt-10 border-t border-border">
