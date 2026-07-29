@@ -73,9 +73,15 @@ function ServiceDetailPage() {
 
       <section className="container-page py-12 md:py-16">
         <div className="max-w-3xl mx-auto">
-          <p className="text-base sm:text-lg text-muted-foreground leading-relaxed mb-6 sm:mb-10">
-            {service.short_description}
-          </p>
+          <div className="text-base sm:text-lg text-muted-foreground leading-relaxed mb-6 sm:mb-10">
+            {(() => {
+              try {
+                const p = JSON.parse(service.short_description);
+                if (p && typeof p === "object" && p.type === "doc") return <div className="prose-content" dangerouslySetInnerHTML={{ __html: renderTipContent(p) }} />;
+              } catch {}
+              return service.short_description;
+            })()}
+          </div>
 
           <div className="prose prose-neutral max-w-none text-muted-foreground leading-relaxed">
             {(() => {

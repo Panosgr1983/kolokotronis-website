@@ -3,7 +3,7 @@ import { useRouterState } from "@tanstack/react-router";
 import { ArrowRight } from "lucide-react";
 import { PageShell, PageHero } from "@/components/PageShell";
 import { CtaBand } from "@/components/CtaBand";
-import { useServices, usePageData } from "@/lib/content-hooks";
+import { useServices, usePageData, renderTipContent } from "@/lib/content-hooks";
 import { getIcon } from "@/lib/icon-map";
 
 export const Route = createFileRoute("/services")({
@@ -48,7 +48,15 @@ function ServicesPage() {
                     <Icon className="size-7" />
                   </div>
                   <h2 className="font-serif text-2xl mb-3">{s.title}</h2>
-                  <p className="text-muted-foreground leading-relaxed mb-6 flex-1">{s.short_description}</p>
+                  <div className="text-muted-foreground leading-relaxed mb-6 flex-1 prose-content">
+                    {(() => {
+                      try {
+                        const p = JSON.parse(s.short_description);
+                        if (p && typeof p === "object" && p.type === "doc") return <div dangerouslySetInnerHTML={{ __html: renderTipContent(p) }} />;
+                      } catch {}
+                      return s.short_description;
+                    })()}
+                  </div>
                   <div className="flex items-center gap-4">
                     <Link to={`/services/${s.slug}`} className="text-primary font-medium inline-flex items-center gap-2 hover:gap-3 transition-all text-sm">
                       Διαβάστε περισσότερα <ArrowRight className="size-4" />
