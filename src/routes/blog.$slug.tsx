@@ -2,7 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { ArrowLeft, Calendar } from "lucide-react";
 import { PageShell } from "@/components/PageShell";
 import { supabase } from "@/lib/supabase";
-import { useSiteSetting, isAnnouncementCategory, CATEGORY_LABELS } from "@/lib/content-hooks";
+import { useSiteSetting, isAnnouncementCategory, CATEGORY_LABELS, renderTipContent } from "@/lib/content-hooks";
 
 interface BlogPost {
   id: string;
@@ -22,88 +22,10 @@ interface BlogPost {
 const TENANT_ID = "00000000-0000-0000-0000-000000000001";
 const monthsGR = ["Ιαν", "Φεβ", "Μαρ", "Απρ", "Μαϊ", "Ιουν", "Ιουλ", "Αυγ", "Σεπ", "Οκτ", "Νοε", "Δεκ"];
 
-function escapeHtml(str: string): string {
-  return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
-}
-
 function formatDate(dateStr: string | null) {
   if (!dateStr) return "";
   const d = new Date(dateStr);
   return `${d.getDate()} ${monthsGR[d.getMonth()]} ${d.getFullYear()}`;
-}
-
-function renderTipContent(node: any): string {
-  if (!node) return "";
-  if (typeof node === "string") return escapeHtml(node);
-
-  if (node.type === "doc") {
-    return (node.content || []).map(renderTipContent).join("");
-  }
-
-  if (node.type === "paragraph") {
-    return `<p class="text-muted-foreground leading-relaxed mb-5">${(node.content || []).map(renderTipContent).join("")}</p>`;
-  }
-
-  if (node.type === "heading") {
-    const level = node.attrs?.level || 2;
-    const sizes: Record<number, string> = { 2: "text-2xl md:text-3xl mt-10 mb-5", 3: "text-xl mt-8 mb-4" };
-    return `<h${level} class="font-serif ${sizes[level] || "text-lg mt-6 mb-3"} text-foreground">${(node.content || []).map(renderTipContent).join("")}</h${level}>`;
-  }
-
-  if (node.type === "bulletList") {
-    return `<ul class="space-y-2 mb-6 pl-5 list-disc text-muted-foreground">${(node.content || []).map(renderTipContent).join("")}</ul>`;
-  }
-
-  if (node.type === "orderedList") {
-    return `<ol class="space-y-2 mb-6 pl-5 list-decimal text-muted-foreground">${(node.content || []).map(renderTipContent).join("")}</ol>`;
-  }
-
-  if (node.type === "listItem") {
-    const childContent = (node.content || []).map(renderTipContent).join("");
-    return `<li class="mb-1">${childContent.replace(/<\/?p[^>]*>/g, "")}</li>`;
-  }
-
-  if (node.type === "image") {
-    const src = escapeHtml(node.attrs?.src || "");
-    const alt = escapeHtml(node.attrs?.alt || "");
-    return `<figure class="my-8"><img src="${src}" alt="${alt}" class="w-full rounded-2xl" loading="lazy" /><figcaption class="text-xs text-muted-foreground text-center mt-2">${alt}</figcaption></figure>`;
-  }
-
-  if (node.type === "horizontalRule") {
-    return `<hr class="my-8 border-border" />`;
-  }
-
-  if (node.type === "hardBreak") {
-    return "<br />";
-  }
-
-  if (node.type === "codeBlock") {
-    const lang = node.attrs?.language ? ` class="language-${escapeHtml(node.attrs.language)}"` : "";
-    return `<pre class="bg-muted p-4 rounded-xl overflow-x-auto text-sm mb-5"><code${lang}>${escapeHtml((node.content || []).map(renderTipContent).join(""))}</code></pre>`;
-  }
-
-  if (node.type === "blockquote") {
-    return `<blockquote class="border-l-4 border-primary pl-4 italic text-muted-foreground my-6">${(node.content || []).map(renderTipContent).join("")}</blockquote>`;
-  }
-
-  if (node.type === "text") {
-    let text = escapeHtml(node.text || "");
-    if (node.marks) {
-      for (const mark of node.marks) {
-        if (mark.type === "bold") text = `<strong>${text}</strong>`;
-        if (mark.type === "italic") text = `<em>${text}</em>`;
-        if (mark.type === "strike") text = `<s>${text}</s>`;
-        if (mark.type === "underline") text = `<u>${text}</u>`;
-        if (mark.type === "link") {
-          const href = escapeHtml(mark.attrs?.href || "");
-          text = `<a href="${href}" class="text-primary underline hover:opacity-80 transition-opacity" target="_blank" rel="noopener noreferrer">${text}</a>`;
-        }
-      }
-    }
-    return text;
-  }
-
-  return "";
 }
 
 export const Route = createFileRoute("/blog/$slug")({

@@ -3,7 +3,7 @@ import { GraduationCap, ShieldCheck, Award, BookOpen, Globe, Star, ArrowRight, C
 import { PageShell, PageHero } from "@/components/PageShell";
 import { CtaBand } from "@/components/CtaBand";
 import { ValuesBand } from "@/components/ValuesBand";
-import { useCredentials, useSiteSetting, usePageData } from "@/lib/content-hooks";
+import { useCredentials, useSiteSetting, usePageData, renderTipContent } from "@/lib/content-hooks";
 import { getIcon } from "@/lib/icon-map";
 
 export const Route = createFileRoute("/about")({
@@ -31,7 +31,9 @@ function AboutPage() {
 
   const bioEyebrow = (useSiteSetting("about_bio_eyebrow") as string) || "Λιγα λογια για εμενα";
   const bioTitle = (useSiteSetting("about_bio_title") as string) || "Ποιος είμαι";
+  const bioContent = useSiteSetting("about_bio_content");
   const bioParagraphs = (useSiteSetting("about_bio_paragraphs") as string[]) || [];
+  const hasRichBio = bioContent && typeof bioContent === "object" && (bioContent as any).type === "doc";
   const portraitImage = (useSiteSetting("about_portrait") as string) || "";
 
   const aboutAchievements = useSiteSetting("about_achievements");
@@ -122,29 +124,33 @@ function AboutPage() {
           <div className="lg:col-span-3">
             <p className="text-xs tracking-[0.25em] uppercase text-primary mb-3 sm:mb-4">{bioEyebrow}</p>
             <h2 className="font-serif text-2xl sm:text-3xl md:text-4xl mb-4 sm:mb-6">{bioTitle}</h2>
-            <div className="prose prose-neutral max-w-none text-muted-foreground leading-relaxed space-y-4">
-              {paragraphs.map((p, i) => (
-                <div key={i}>
-                  {i === insertQuoteIdx && pullQuote && (
-                    <aside className="my-6 sm:my-8 pl-6 border-l-2 border-primary py-2">
-                      <p className="font-serif text-lg sm:text-xl md:text-2xl text-foreground leading-relaxed italic">&ldquo;{pullQuote}&rdquo;</p>
-                      {pullQuoteAuthor && (
-                        <p className="text-sm text-muted-foreground mt-2">&mdash; {pullQuoteAuthor}</p>
-                      )}
-                    </aside>
-                  )}
-                  <p>{p}</p>
-                </div>
-              ))}
-              {paragraphs.length === 0 && pullQuote && (
-                <aside className="my-8 pl-6 border-l-2 border-primary py-2">
-                  <p className="font-serif text-xl md:text-2xl text-foreground leading-relaxed italic">&ldquo;{pullQuote}&rdquo;</p>
-                  {pullQuoteAuthor && (
-                    <p className="text-sm text-muted-foreground mt-2">&mdash; {pullQuoteAuthor}</p>
-                  )}
-                </aside>
-              )}
-            </div>
+            {hasRichBio ? (
+              <div className="prose-content" dangerouslySetInnerHTML={{ __html: renderTipContent(bioContent) }} />
+            ) : (
+              <div className="prose prose-neutral max-w-none text-muted-foreground leading-relaxed space-y-4">
+                {paragraphs.map((p, i) => (
+                  <div key={i}>
+                    {i === insertQuoteIdx && pullQuote && (
+                      <aside className="my-6 sm:my-8 pl-6 border-l-2 border-primary py-2">
+                        <p className="font-serif text-lg sm:text-xl md:text-2xl text-foreground leading-relaxed italic">&ldquo;{pullQuote}&rdquo;</p>
+                        {pullQuoteAuthor && (
+                          <p className="text-sm text-muted-foreground mt-2">&mdash; {pullQuoteAuthor}</p>
+                        )}
+                      </aside>
+                    )}
+                    <p>{p}</p>
+                  </div>
+                ))}
+                {paragraphs.length === 0 && pullQuote && (
+                  <aside className="my-8 pl-6 border-l-2 border-primary py-2">
+                    <p className="font-serif text-xl md:text-2xl text-foreground leading-relaxed italic">&ldquo;{pullQuote}&rdquo;</p>
+                    {pullQuoteAuthor && (
+                      <p className="text-sm text-muted-foreground mt-2">&mdash; {pullQuoteAuthor}</p>
+                    )}
+                  </aside>
+                )}
+              </div>
+            )}
           </div>
         </div>
       </section>
