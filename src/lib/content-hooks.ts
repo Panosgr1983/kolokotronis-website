@@ -251,3 +251,27 @@ export function usePageData(): PageData {
   if (!raw || typeof raw !== "object") return {};
   return raw as PageData;
 }
+
+export type ServiceFaqEntry = {
+  id: string;
+  question: string;
+  answer: string;
+  sort_order: number;
+};
+
+export function useServiceFaq(slug: string) {
+  return useQuery({
+    queryKey: ["service_faq", slug],
+    queryFn: async () => {
+      const { data } = await supabase
+        .from("service_faq_entries")
+        .select("id, question, answer, sort_order, services!inner(slug)")
+        .eq("services.slug", slug)
+        .eq("tenant_id", TENANT_ID)
+        .eq("is_active", true)
+        .order("sort_order");
+      return (data ?? []) as ServiceFaqEntry[];
+    },
+    staleTime: 5 * 60 * 1000,
+  });
+}

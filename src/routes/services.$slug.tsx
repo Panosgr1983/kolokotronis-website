@@ -1,9 +1,10 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { ArrowLeft, ArrowRight, Calendar } from "lucide-react";
+import { ArrowLeft, ArrowRight, Calendar, ChevronDown } from "lucide-react";
 import { PageShell } from "@/components/PageShell";
 import { CtaBand } from "@/components/CtaBand";
-import { useServiceBySlug, usePageData, useRelatedArticles, useSiteSetting, isAnnouncementCategory } from "@/lib/content-hooks";
+import { useServiceBySlug, usePageData, useRelatedArticles, useSiteSetting, isAnnouncementCategory, useServiceFaq } from "@/lib/content-hooks";
 import { getIcon } from "@/lib/icon-map";
+import { Accordion, AccordionItem, AccordionTrigger, AccordionContent } from "@/components/ui/accordion";
 
 const monthsGR = ["Ιαν", "Φεβ", "Μαρ", "Απρ", "Μαϊ", "Ιουν", "Ιουλ", "Αυγ", "Σεπ", "Οκτ", "Νοε", "Δεκ"];
 
@@ -25,6 +26,8 @@ function ServiceDetailPage() {
   const relatedPosts = relatedData?.articles ?? [];
   const relatedSectionTitle = relatedData?.title ?? "Σχετικά άρθρα";
   const announcementShowDates = (useSiteSetting("announcement_show_dates") as string) === "true";
+  const { data: faqData } = useServiceFaq(slug);
+  const faqEntries = faqData ?? [];
 
   if (isLoading) {
     return (
@@ -87,6 +90,43 @@ function ServiceDetailPage() {
           </div>
         </div>
       </section>
+
+      {faqEntries.length > 0 && (
+        <section className="border-t border-border py-14 sm:py-20 md:py-24">
+          <div className="container-page max-w-3xl mx-auto">
+            <h2 className="font-serif text-2xl sm:text-3xl mb-8 text-center">Συχνές Ερωτήσεις</h2>
+            <Accordion type="single" collapsible className="w-full">
+              {faqEntries.map((faq) => (
+                <AccordionItem key={faq.id} value={faq.id} className="border-b border-border" data-testid="faq-item">
+                  <AccordionTrigger className="text-left font-medium text-sm sm:text-base py-4 hover:text-primary transition-colors" data-testid="faq-trigger">
+                    {faq.question}
+                  </AccordionTrigger>
+                  <AccordionContent className="text-muted-foreground text-sm sm:text-base leading-relaxed pb-4">
+                    {faq.answer}
+                  </AccordionContent>
+                </AccordionItem>
+              ))}
+            </Accordion>
+          </div>
+          <script
+            type="application/ld+json"
+            dangerouslySetInnerHTML={{
+              __html: JSON.stringify({
+                "@context": "https://schema.org",
+                "@type": "FAQPage",
+                mainEntity: faqEntries.map((faq) => ({
+                  "@type": "Question",
+                  name: faq.question,
+                  acceptedAnswer: {
+                    "@type": "Answer",
+                    text: faq.answer,
+                  },
+                })),
+              }),
+            }}
+          />
+        </section>
+      )}
 
       {relatedPosts.length > 0 && (
         <section className="border-t border-border mt-12 sm:mt-16 pt-10 sm:pt-14 pb-10 sm:pb-14">

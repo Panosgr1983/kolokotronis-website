@@ -36,3 +36,7 @@ dist-ssr
 
 # Local-only reference (never commit)
 AGENTS.md
+
+# Playwright generated artifacts
+test-results/
+playwright-report/
