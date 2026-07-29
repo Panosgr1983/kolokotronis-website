@@ -2,13 +2,8 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { ArrowLeft, ArrowRight, Calendar } from "lucide-react";
 import { PageShell } from "@/components/PageShell";
 import { CtaBand } from "@/components/CtaBand";
-import { useServiceBySlug, usePageData, useBlogPostsByCategory } from "@/lib/content-hooks";
+import { useServiceBySlug, usePageData, useRelatedArticles, useSiteSetting, isAnnouncementCategory } from "@/lib/content-hooks";
 import { getIcon } from "@/lib/icon-map";
-
-const CATEGORY_MAP: Record<string, string> = {
-  omades: "ΟΜΑΔΕΣ",
-  "seminar-omilies": "ΟΜΙΛΙΕΣ ΣΕΜΙΝΑΡΙΑ",
-};
 
 const monthsGR = ["Ιαν", "Φεβ", "Μαρ", "Απρ", "Μαϊ", "Ιουν", "Ιουλ", "Αυγ", "Σεπ", "Οκτ", "Νοε", "Δεκ"];
 
@@ -26,9 +21,10 @@ function ServiceDetailPage() {
   const { slug } = Route.useParams();
   const { data: service, isLoading } = useServiceBySlug(slug);
   const svcPageData = usePageData()[`/services/${slug}`] || {};
-  const blogCategory = CATEGORY_MAP[slug];
-  const showRelatedArticles = !!blogCategory;
-  const { data: relatedPosts = [] } = useBlogPostsByCategory(blogCategory || "", { showOnServicePage: true, enabled: showRelatedArticles });
+  const { data: relatedData } = useRelatedArticles(slug);
+  const relatedPosts = relatedData?.articles ?? [];
+  const relatedSectionTitle = relatedData?.title ?? "Σχετικά άρθρα";
+  const announcementShowDates = (useSiteSetting("announcement_show_dates") as string) === "true";
 
   if (isLoading) {
     return (
@@ -92,14 +88,16 @@ function ServiceDetailPage() {
         </div>
       </section>
 
-      {showRelatedArticles && relatedPosts.length > 0 && (
+      {relatedPosts.length > 0 && (
         <section className="border-t border-border mt-12 sm:mt-16 pt-10 sm:pt-14 pb-10 sm:pb-14">
           <div className="container-page">
             <h2 className="font-serif text-2xl sm:text-3xl mb-8 text-center">
-              Άρθρα για {service.title}
+              {relatedSectionTitle}
             </h2>
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-7">
-              {relatedPosts.map((p) => (
+              {relatedPosts.map((p) => {
+                const isAnnouncement = isAnnouncementCategory(p.category);
+                return (
                 <Link key={p.id} to={`/blog/${p.slug}`} className="card-soft overflow-hidden flex flex-col group">
                   {p.image_url ? (
                     <img src={p.image_url} alt={p.title} className="aspect-[4/3] w-full object-cover group-hover:scale-105 transition-transform duration-500" />
@@ -111,8 +109,10 @@ function ServiceDetailPage() {
                   <div className="p-6 flex flex-col flex-1">
                     <div className="flex items-center gap-3 text-xs uppercase tracking-wider text-muted-foreground mb-3">
                       <span className="text-primary font-medium">{p.category}</span>
-                      <span>·</span>
-                      <span>{formatDate(p.published_at)}</span>
+                      {p.category && <span>·</span>}
+                      {(!isAnnouncement || announcementShowDates) && (
+                        <span>{formatDate(p.published_at)}</span>
+                      )}
                     </div>
                     <h3 className="font-serif text-xl leading-snug mb-3 group-hover:text-primary transition-colors">{p.title}</h3>
                     <p className="text-sm text-muted-foreground leading-relaxed mb-5 flex-1">{p.excerpt}</p>
@@ -121,7 +121,8 @@ function ServiceDetailPage() {
                     </span>
                   </div>
                 </Link>
-              ))}
+                );
+              })}
             </div>
           </div>
         </section>

@@ -4,7 +4,7 @@ import { PageShell } from "@/components/PageShell";
 import { CtaBand } from "@/components/CtaBand";
 import { ValuesBand } from "@/components/ValuesBand";
 import { ContactForm } from "@/components/ContactForm";
-import { useServices, useTestimonials, useSiteSetting, usePageData, useBlogPostsByCategory } from "@/lib/content-hooks";
+import { useServices, useTestimonials, useSiteSetting, usePageData, useBlogPostsByCategory, isAnnouncementCategory } from "@/lib/content-hooks";
 import { useBusinessInfo } from "@/lib/business-info";
 import { getIcon } from "@/lib/icon-map";
 
@@ -168,6 +168,7 @@ function HomePage() {
   const blogHomeSectionCtaText = (useSiteSetting("blog_home_section_cta_text") as string) || "Δείτε όλα τα άρθρα";
   const blogHomeSectionCtaLink = (useSiteSetting("blog_home_section_cta_link") as string) || "/blog";
   const blogHomeSectionCount = Number(useSiteSetting("blog_home_section_count")) || 2;
+  const announcementShowDates = (useSiteSetting("announcement_show_dates") as string) === "true";
 
   const headlineParts = heroHeading.split("\n");
 
@@ -238,7 +239,7 @@ function HomePage() {
             <h2 className="font-serif text-2xl sm:text-3xl md:text-4xl mb-4 sm:mb-6">{aboutSectionTitle}</h2>
             <p className="text-muted-foreground leading-relaxed mb-4">{aboutSectionParagraph1}</p>
             <p className="text-muted-foreground leading-relaxed mb-4">{aboutSectionParagraph2}</p>
-            <Link to="/about" className="btn-outline text-xs tracking-[0.18em] uppercase">{aboutSectionCtaText}</Link>
+            <Link to="/about" className="btn-cta text-xs tracking-[0.18em] uppercase">{aboutSectionCtaText}</Link>
           </div>
           <div>
             {aboutSectionPortrait ? (
@@ -305,7 +306,9 @@ function HomePage() {
                       </div>
                     )}
                     <div className="p-6">
-                      <p className="text-xs uppercase tracking-[0.18em] text-muted-foreground mb-3">{p.published_at ? new Date(p.published_at).toLocaleDateString("el-GR", { year: "numeric", month: "short", day: "numeric" }) : ""}</p>
+                      {(!isAnnouncementCategory(p.category) || announcementShowDates) && (
+                        <p className="text-xs uppercase tracking-[0.18em] text-muted-foreground mb-3">{p.published_at ? new Date(p.published_at).toLocaleDateString("el-GR", { year: "numeric", month: "short", day: "numeric" }) : ""}</p>
+                      )}
                       <h3 className="font-serif text-xl leading-snug mb-4">{p.title}</h3>
                       <span className="text-xs tracking-[0.18em] uppercase text-primary font-medium inline-flex items-center gap-1.5 group-hover:gap-2.5 transition-all">
                         Διαβαστε περισσοτερα <ArrowRight className="size-3.5" />
@@ -347,7 +350,9 @@ function HomePage() {
                       </div>
                     )}
                     <div className="p-6">
-                      <p className="text-xs uppercase tracking-[0.18em] text-muted-foreground mb-3">{p.published_at ? new Date(p.published_at).toLocaleDateString("el-GR", { year: "numeric", month: "short", day: "numeric" }) : ""}</p>
+                      {(!isAnnouncementCategory(p.category) || announcementShowDates) && (
+                        <p className="text-xs uppercase tracking-[0.18em] text-muted-foreground mb-3">{p.published_at ? new Date(p.published_at).toLocaleDateString("el-GR", { year: "numeric", month: "short", day: "numeric" }) : ""}</p>
+                      )}
                       <h3 className="font-serif text-xl leading-snug mb-4">{p.title}</h3>
                       <span className="text-xs tracking-[0.18em] uppercase text-primary font-medium inline-flex items-center gap-1.5 group-hover:gap-2.5 transition-all">
                         Διαβαστε περισσοτερα <ArrowRight className="size-3.5" />

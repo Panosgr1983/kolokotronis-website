@@ -2,7 +2,7 @@ import { createFileRoute, Link, Outlet, useSearch, useRouterState } from "@tanst
 import { ArrowRight } from "lucide-react";
 import { useRef, useEffect } from "react";
 import { PageShell, PageHero } from "@/components/PageShell";
-import { useBlogPosts, usePageData } from "@/lib/content-hooks";
+import { useBlogPosts, usePageData, useSiteSetting, CATEGORY_LABELS, CANONICAL_CATEGORIES, ANNOUNCEMENT_CATEGORIES, isAnnouncementCategory, normalizeBlogCategory } from "@/lib/content-hooks";
 
 interface BlogSearch {
   category?: string;
@@ -23,13 +23,7 @@ export const Route = createFileRoute("/blog")({
   component: BlogPage,
 });
 
-const CATEGORIES = ["ΟΜΙΛΙΕΣ", "ΣΕΜΙΝΑΡΙΑ", "ΟΜΑΔΕΣ"];
-const CATEGORY_LABELS: Record<string, string> = {
-  "ΟΜΙΛΙΕΣ ΣΕΜΙΝΑΡΙΑ": "Ομιλίες, Σεμινάρια",
-  "ΟΜΙΛΙΕΣ": "Ομιλίες",
-  "ΣΕΜΙΝΑΡΙΑ": "Σεμινάρια",
-  "ΟΜΑΔΕΣ": "Ομάδες",
-};
+const DISPLAY_CATEGORIES = ["ΟΜΙΛΙΕΣ ΣΕΜΙΝΑΡΙΑ", "ΟΜΑΔΕΣ"] as const;
 
 const monthsGR = ["Ιαν", "Φεβ", "Μαρ", "Απρ", "Μαϊ", "Ιουν", "Ιουλ", "Αυγ", "Σεπ", "Οκτ", "Νοε", "Δεκ"];
 
@@ -41,9 +35,7 @@ function formatDate(dateStr: string | null) {
 
 function matchesCategory(post: { category: string | null }, filter: string | null): boolean {
   if (!filter) return true;
-  const c = post.category || "";
-  if (filter === "ΟΜΙΛΙΕΣ ΣΕΜΙΝΑΡΙΑ") return c === "ΟΜΙΛΙΕΣ ΣΕΜΙΝΑΡΙΑ";
-  return c === filter;
+  return normalizeBlogCategory(post.category) === normalizeBlogCategory(filter);
 }
 
 function BlogPage() {
@@ -55,6 +47,7 @@ function BlogPage() {
   const hasMountedRef = useRef(false);
   const previousCategoryRef = useRef<string | undefined>(undefined);
   const { category: activeCategory } = useSearch({ from: Route.id });
+  const announcementShowDates = (useSiteSetting("announcement_show_dates") as string) === "true";
 
   useEffect(() => {
     if (!hasMountedRef.current) {
@@ -75,6 +68,13 @@ function BlogPage() {
   const filtered = activeCategory
     ? posts.filter(p => matchesCategory(p, activeCategory))
     : posts;
+
+  const isAnnouncementFilter = activeCategory
+    ? isAnnouncementCategory(normalizeBlogCategory(activeCategory))
+    : false;
+
+  const emptyMessage = (useSiteSetting(isAnnouncementFilter ? "announcement_empty_message" : "blog_empty_message") as string)
+    || (isAnnouncementFilter ? "Δεν υπάρχουν ανακοινώσεις αυτή τη στιγμή." : "Δεν υπάρχουν ακόμη άρθρα. Ελέγξτε ξανά σύντομα.");
 
   if (!isIndex) return <Outlet />;
 
@@ -99,25 +99,7 @@ function BlogPage() {
           >
             Ολα
           </Link>
-          {CATEGORIES.map((cat) => {
-            const isSingle = cat === "ΟΜΙΛΙΕΣ" || cat === "ΣΕΜΙΝΑΡΙΑ";
-            if (isSingle) {
-              const combinedCat = "ΟΜΙΛΙΕΣ ΣΕΜΙΝΑΡΙΑ";
-              return (
-                <Link
-                  key={cat}
-                  to="/blog"
-                  search={{ category: combinedCat }}
-                  className={`text-xs tracking-[0.2em] uppercase px-4 py-2 rounded-full border transition-colors ${
-                    activeCategory === combinedCat
-                      ? "bg-primary text-primary-foreground border-primary"
-                      : "border-border text-muted-foreground hover:text-foreground hover:border-foreground/30"
-                  }`}
-                >
-                  {CATEGORY_LABELS[cat]}
-                </Link>
-              );
-            }
+          {DISPLAY_CATEGORIES.map((cat) => {
             const catPosts = posts.filter(p => matchesCategory(p, cat));
             if (catPosts.length === 0) return null;
             return (
@@ -142,7 +124,7 @@ function BlogPage() {
         ) : (
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-7">
             {filtered.length === 0 && (
-              <div className="col-span-full text-center py-20 text-muted-foreground">Δεν υπάρχουν άρθρα σε αυτή την κατηγορία.</div>
+              <div className="col-span-full text-center py-20 text-muted-foreground">{emptyMessage}</div>
             )}
             {filtered.map((p) => (
               <Link key={p.id} to={`/blog/${p.slug}`} className="card-soft overflow-hidden flex flex-col group">
@@ -157,7 +139,9 @@ function BlogPage() {
                   <div className="flex items-center gap-3 text-xs uppercase tracking-wider text-muted-foreground mb-3">
                     {p.category && <span className="text-primary font-medium">{CATEGORY_LABELS[p.category] || p.category}</span>}
                     {p.category && <span>·</span>}
-                    <span>{formatDate(p.published_at)}</span>
+                    {(!isAnnouncementCategory(p.category) || announcementShowDates) && (
+                      <span>{formatDate(p.published_at)}</span>
+                    )}
                   </div>
                   <h2 className="font-serif text-xl leading-snug mb-3 group-hover:text-primary transition-colors">{p.title}</h2>
                   <p className="text-sm text-muted-foreground leading-relaxed mb-5 flex-1">{p.excerpt}</p>

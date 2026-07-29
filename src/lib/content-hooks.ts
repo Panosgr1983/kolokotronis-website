@@ -31,7 +31,7 @@ export function useBlogPostsByCategory(category: string, options?: { showOnServi
         .eq("tenant_id", TENANT_ID)
         .eq("is_published", true);
       if (category) {
-        query = query.eq("category", category);
+        query = query.eq("category", normalizeBlogCategory(category) || category);
       }
       if (options?.showOnServicePage) {
         query = query.eq("show_on_service_page", true);
@@ -40,6 +40,64 @@ export function useBlogPostsByCategory(category: string, options?: { showOnServi
       return data ?? [];
     },
     enabled: options?.enabled ?? true,
+    staleTime: 5 * 60 * 1000,
+  });
+}
+
+export function useRelatedArticles(slug: string) {
+  return useQuery({
+    queryKey: ["related_articles", slug],
+    queryFn: async () => {
+      const { data: service } = await supabase
+        .from("services")
+        .select("id, show_related_articles, related_articles_mode, related_articles_limit, related_articles_title, related_articles_title_en, title")
+        .eq("tenant_id", TENANT_ID)
+        .eq("slug", slug)
+        .maybeSingle();
+
+      if (!service || !service.show_related_articles) {
+        return { articles: [], title: "" };
+      }
+
+      const limit = service.related_articles_limit || 6;
+      const sectionTitle = service.related_articles_title || "Σχετικά άρθρα";
+      let articles: any[] = [];
+
+      if (service.related_articles_mode === "manual") {
+        const { data: relations } = await supabase
+          .from("service_related_articles")
+          .select("blog_post_id, sort_order, blog_posts!inner(*)")
+          .eq("service_id", service.id)
+          .eq("blog_posts.is_published", true)
+          .order("sort_order")
+          .limit(limit);
+
+        if (relations) {
+          articles = relations.map((r: any) => r.blog_posts).filter(Boolean);
+        }
+      } else if (service.related_articles_mode === "category" && service.title) {
+        const { data: posts } = await supabase
+          .from("blog_posts")
+          .select("*")
+          .eq("tenant_id", TENANT_ID)
+          .eq("is_published", true)
+          .eq("category", service.title)
+          .order("published_at", { ascending: false })
+          .limit(limit);
+        articles = posts ?? [];
+      } else {
+        const { data: posts } = await supabase
+          .from("blog_posts")
+          .select("*")
+          .eq("tenant_id", TENANT_ID)
+          .eq("is_published", true)
+          .order("published_at", { ascending: false })
+          .limit(limit);
+        articles = posts ?? [];
+      }
+
+      return { articles, title: sectionTitle };
+    },
     staleTime: 5 * 60 * 1000,
   });
 }
@@ -141,6 +199,38 @@ export function useSiteSettings() {
     },
     staleTime: 30 * 1000,
   });
+}
+
+export const ANNOUNCEMENT_CATEGORIES = [
+  "ΟΜΙΛΙΕΣ ΣΕΜΙΝΑΡΙΑ",
+  "ΟΜΑΔΕΣ",
+] as const;
+
+export function isAnnouncementCategory(category?: string | null): boolean {
+  if (!category) return false;
+  const normalized = normalizeBlogCategory(category);
+  return ANNOUNCEMENT_CATEGORIES.includes(
+    normalized as typeof ANNOUNCEMENT_CATEGORIES[number]
+  );
+}
+
+export const CANONICAL_CATEGORIES = [
+  "ΑΡΘΡΑ",
+  "ΟΜΙΛΙΕΣ ΣΕΜΙΝΑΡΙΑ",
+  "ΟΜΑΔΕΣ",
+] as const;
+
+export const CATEGORY_LABELS: Record<string, string> = {
+  ΑΡΘΡΑ: "Άρθρα",
+  "ΟΜΙΛΙΕΣ ΣΕΜΙΝΑΡΙΑ": "Ομιλίες & Σεμινάρια",
+  ΟΜΑΔΕΣ: "Ομάδες",
+};
+
+export function normalizeBlogCategory(cat: string | null | undefined): string | null {
+  if (!cat) return null;
+  const trimmed = cat.trim();
+  if (trimmed === "ΟΜΙΛΙΕΣ" || trimmed === "ΣΕΜΙΝΑΡΙΑ") return "ΟΜΙΛΙΕΣ ΣΕΜΙΝΑΡΙΑ";
+  return trimmed;
 }
 
 export function useSiteSetting(key: string) {

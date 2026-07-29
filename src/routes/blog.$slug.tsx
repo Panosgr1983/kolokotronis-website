@@ -2,6 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { ArrowLeft, Calendar } from "lucide-react";
 import { PageShell } from "@/components/PageShell";
 import { supabase } from "@/lib/supabase";
+import { useSiteSetting, isAnnouncementCategory, CATEGORY_LABELS } from "@/lib/content-hooks";
 
 interface BlogPost {
   id: string;
@@ -21,6 +22,10 @@ interface BlogPost {
 const TENANT_ID = "00000000-0000-0000-0000-000000000001";
 const monthsGR = ["Ιαν", "Φεβ", "Μαρ", "Απρ", "Μαϊ", "Ιουν", "Ιουλ", "Αυγ", "Σεπ", "Οκτ", "Νοε", "Δεκ"];
 
+function escapeHtml(str: string): string {
+  return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+}
+
 function formatDate(dateStr: string | null) {
   if (!dateStr) return "";
   const d = new Date(dateStr);
@@ -29,7 +34,7 @@ function formatDate(dateStr: string | null) {
 
 function renderTipContent(node: any): string {
   if (!node) return "";
-  if (typeof node === "string") return node;
+  if (typeof node === "string") return escapeHtml(node);
 
   if (node.type === "doc") {
     return (node.content || []).map(renderTipContent).join("");
@@ -46,26 +51,53 @@ function renderTipContent(node: any): string {
   }
 
   if (node.type === "bulletList") {
-    return `<ul class="space-y-2 mb-6">${(node.content || []).map(renderTipContent).join("")}</ul>`;
+    return `<ul class="space-y-2 mb-6 pl-5 list-disc text-muted-foreground">${(node.content || []).map(renderTipContent).join("")}</ul>`;
+  }
+
+  if (node.type === "orderedList") {
+    return `<ol class="space-y-2 mb-6 pl-5 list-decimal text-muted-foreground">${(node.content || []).map(renderTipContent).join("")}</ol>`;
   }
 
   if (node.type === "listItem") {
     const childContent = (node.content || []).map(renderTipContent).join("");
-    return `<li class="flex items-start gap-2 text-muted-foreground"><span class="text-primary mt-1.5 shrink-0 size-1.5 rounded-full bg-primary"></span><span>${childContent.replace(/<\/?p[^>]*>/g, "")}</span></li>`;
+    return `<li class="mb-1">${childContent.replace(/<\/?p[^>]*>/g, "")}</li>`;
   }
 
   if (node.type === "image") {
-    const src = node.attrs?.src || "";
-    const alt = node.attrs?.alt || "";
+    const src = escapeHtml(node.attrs?.src || "");
+    const alt = escapeHtml(node.attrs?.alt || "");
     return `<figure class="my-8"><img src="${src}" alt="${alt}" class="w-full rounded-2xl" loading="lazy" /><figcaption class="text-xs text-muted-foreground text-center mt-2">${alt}</figcaption></figure>`;
   }
 
+  if (node.type === "horizontalRule") {
+    return `<hr class="my-8 border-border" />`;
+  }
+
+  if (node.type === "hardBreak") {
+    return "<br />";
+  }
+
+  if (node.type === "codeBlock") {
+    const lang = node.attrs?.language ? ` class="language-${escapeHtml(node.attrs.language)}"` : "";
+    return `<pre class="bg-muted p-4 rounded-xl overflow-x-auto text-sm mb-5"><code${lang}>${escapeHtml((node.content || []).map(renderTipContent).join(""))}</code></pre>`;
+  }
+
+  if (node.type === "blockquote") {
+    return `<blockquote class="border-l-4 border-primary pl-4 italic text-muted-foreground my-6">${(node.content || []).map(renderTipContent).join("")}</blockquote>`;
+  }
+
   if (node.type === "text") {
-    let text = node.text || "";
+    let text = escapeHtml(node.text || "");
     if (node.marks) {
       for (const mark of node.marks) {
         if (mark.type === "bold") text = `<strong>${text}</strong>`;
         if (mark.type === "italic") text = `<em>${text}</em>`;
+        if (mark.type === "strike") text = `<s>${text}</s>`;
+        if (mark.type === "underline") text = `<u>${text}</u>`;
+        if (mark.type === "link") {
+          const href = escapeHtml(mark.attrs?.href || "");
+          text = `<a href="${href}" class="text-primary underline hover:opacity-80 transition-opacity" target="_blank" rel="noopener noreferrer">${text}</a>`;
+        }
       }
     }
     return text;
@@ -107,8 +139,13 @@ export const Route = createFileRoute("/blog/$slug")({
 
 function BlogPostPage() {
   const post = Route.useLoaderData();
+  const announcementShowDates = (useSiteSetting("announcement_show_dates") as string) === "true";
 
   if (!post) return null;
+
+  const isAnnouncement = isAnnouncementCategory(post.category);
+  const backLabel = (useSiteSetting(isAnnouncement ? "announcement_back_button_text" : "blog_back_button_text") as string)
+    || (isAnnouncement ? "Όλες οι ανακοινώσεις" : "Όλα τα άρθρα");
 
   return (
     <PageShell>
@@ -120,22 +157,29 @@ function BlogPostPage() {
           <div className="absolute inset-0 bg-gradient-to-t from-background via-background/40 to-transparent" />
           <div className="absolute bottom-0 left-0 right-0 container-page pb-6 sm:pb-10">
             <Link to="/blog" className="inline-flex items-center gap-1.5 text-xs sm:text-sm text-muted-foreground hover:text-foreground transition-colors mb-3 sm:mb-4">
-              <ArrowLeft size={14} /> Ολα τα αρθρα
+              <ArrowLeft size={14} /> {backLabel}
             </Link>
             <h1 className="font-serif text-xl sm:text-3xl md:text-5xl lg:text-6xl text-foreground max-w-3xl leading-tight">{post.title}</h1>
-            <div className="flex items-center gap-3 mt-3 sm:mt-4 text-xs sm:text-sm text-muted-foreground">
-              <Calendar size={14} />
-              <span>{formatDate(post.published_at)}</span>
-              {post.category && <><span>·</span><span className="text-primary font-medium">{post.category}</span></>}
-            </div>
+            {(!isAnnouncement || announcementShowDates) && (
+              <div className="flex items-center gap-3 mt-3 sm:mt-4 text-xs sm:text-sm text-muted-foreground">
+                <Calendar size={14} />
+                <span>{formatDate(post.published_at)}</span>
+                {post.category && <><span>·</span><span className="text-primary font-medium">{CATEGORY_LABELS[post.category] || post.category}</span></>}
+              </div>
+            )}
+            {isAnnouncement && !announcementShowDates && post.category && (
+              <div className="flex items-center gap-3 mt-3 sm:mt-4 text-xs sm:text-sm text-muted-foreground">
+                <span className="text-primary font-medium">{CATEGORY_LABELS[post.category] || post.category}</span>
+              </div>
+            )}
           </div>
         </div>
 
-        <div className="container-page py-12 md:py-16 max-w-3xl mx-auto" dangerouslySetInnerHTML={{ __html: renderTipContent(post.content) }} />
+        <div className="container-page py-12 md:py-16 max-w-3xl mx-auto prose-content" dangerouslySetInnerHTML={{ __html: renderTipContent(post.content) }} />
 
         <div className="container-page pb-12 sm:pb-16 text-center border-t border-border pt-6 sm:pt-10">
           <Link to="/blog" className="inline-flex items-center gap-2 text-primary hover:gap-3 transition-all">
-            <ArrowLeft size={14} /> Ολα τα αρθρα
+            <ArrowLeft size={14} /> {backLabel}
           </Link>
         </div>
       </article>

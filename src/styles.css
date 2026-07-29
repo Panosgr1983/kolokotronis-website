@@ -157,6 +157,22 @@
   }
 }
 
+/* Rich text prose styles */
+.prose-content ul {
+  list-style-type: disc;
+  padding-left: 1.5rem;
+}
+.prose-content ol {
+  list-style-type: decimal;
+  padding-left: 1.5rem;
+}
+.prose-content li {
+  margin-bottom: 0.25rem;
+}
+.prose-content p:empty {
+  min-height: 1rem;
+}
+
 @media (max-width: 1024px) {
   .bg-fixed {
     background-attachment: scroll !important;
