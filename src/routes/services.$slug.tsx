@@ -66,7 +66,7 @@ function ServiceDetailPage() {
             <div className="size-10 sm:size-14 rounded-xl sm:rounded-2xl bg-primary/10 text-primary flex items-center justify-center shrink-0">
               <Icon className="size-5 sm:size-7" strokeWidth={1.5} />
             </div>
-            <h1 className="font-serif text-xl sm:text-3xl md:text-5xl lg:text-6xl text-foreground max-w-3xl leading-tight">{service.title}</h1>
+            <h1 className="font-serif text-xl sm:text-3xl md:text-5xl lg:text-6xl text-foreground leading-tight">{service.title}</h1>
           </div>
         </div>
       </div>

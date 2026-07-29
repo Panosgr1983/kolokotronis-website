@@ -81,7 +81,7 @@ function BlogPostPage() {
             <Link to="/blog" className="inline-flex items-center gap-1.5 text-xs sm:text-sm text-muted-foreground hover:text-foreground transition-colors mb-3 sm:mb-4">
               <ArrowLeft size={14} /> {backLabel}
             </Link>
-            <h1 className="font-serif text-xl sm:text-3xl md:text-5xl lg:text-6xl text-foreground max-w-3xl leading-tight">{post.title}</h1>
+            <h1 className="font-serif text-xl sm:text-3xl md:text-5xl lg:text-6xl text-foreground leading-tight">{post.title}</h1>
             {(!isAnnouncement || announcementShowDates) && (
               <div className="flex items-center gap-3 mt-3 sm:mt-4 text-xs sm:text-sm text-muted-foreground">
                 <Calendar size={14} />
