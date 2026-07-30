@@ -345,21 +345,19 @@ export function renderTipContent(node: any): string {
  *   Card / Preview / Summary → extractPlainText()
  *   Full article / About / Service detail → renderTipContent()
  */
-export function extractPlainText(val: string | null | undefined): string {
+export function extractPlainText(val: any): string {
   if (!val) return '';
-  try {
-    const parsed = JSON.parse(val);
-    if (parsed && typeof parsed === 'object' && parsed.type === 'doc') {
-      const texts: string[] = [];
-      function walk(n: any) {
-        if (n.type === 'text') texts.push(n.text || '');
-        if (n.content) n.content.forEach(walk);
-      }
-      walk(parsed);
-      return texts.join(' ').trim();
+  const doc = typeof val === 'string' ? (() => { try { return JSON.parse(val); } catch { return null; } })() : val;
+  if (doc && typeof doc === 'object' && doc.type === 'doc') {
+    const texts: string[] = [];
+    function walk(n: any) {
+      if (n.type === 'text') texts.push(n.text || '');
+      if (n.content) n.content.forEach(walk);
     }
-  } catch {}
-  return val;
+    walk(doc);
+    return texts.join(' ').trim();
+  }
+  return typeof val === 'string' ? val : String(val);
 }
 
 export function useServiceFaq(slug: string) {
