@@ -122,7 +122,17 @@ test.describe('Manual QA — Pre-Client Review', () => {
     expect(bodyWidth).toBeLessThanOrEqual(viewportWidth + 2);
   });
 
-  test('Service pages: all 5 load without 404s', async ({ page }) => {
+  test('Homepage service cards: no raw TipTap JSON keys leaked', async ({ page }) => {
+  await page.goto(BASE_URL, { waitUntil: 'networkidle' });
+  await page.waitForTimeout(3000);
+  const body = await page.evaluate(() => document.body.innerText);
+  const forbidden = ['"type"', '"doc"', '"content"', '{"type"', '"paragraph"', '"text"'];
+  for (const key of forbidden) {
+    expect(body).not.toContain(key);
+  }
+});
+
+test('Service pages: all 5 load without 404s', async ({ page }) => {
     const services = ['/services/autognosia', '/services/reiki', '/services/emdr', '/services/mindfulness', '/services/epignosi'];
     for (const s of services) {
       await page.goto(`${BASE_URL}${s}`, { waitUntil: 'networkidle' });
