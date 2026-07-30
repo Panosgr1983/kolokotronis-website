@@ -337,6 +337,23 @@ export function renderTipContent(node: any): string {
   return "";
 }
 
+export function extractPlainText(val: string | null | undefined): string {
+  if (!val) return '';
+  try {
+    const parsed = JSON.parse(val);
+    if (parsed && typeof parsed === 'object' && parsed.type === 'doc') {
+      const texts: string[] = [];
+      function walk(n: any) {
+        if (n.type === 'text') texts.push(n.text || '');
+        if (n.content) n.content.forEach(walk);
+      }
+      walk(parsed);
+      return texts.join(' ').trim();
+    }
+  } catch {}
+  return val;
+}
+
 export function useServiceFaq(slug: string) {
   return useQuery({
     queryKey: ["service_faq", slug],

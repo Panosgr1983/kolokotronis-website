@@ -4,7 +4,7 @@ import { PageShell } from "@/components/PageShell";
 import { CtaBand } from "@/components/CtaBand";
 import { ValuesBand } from "@/components/ValuesBand";
 import { ContactForm } from "@/components/ContactForm";
-import { useServices, useTestimonials, useSiteSetting, usePageData, useBlogPostsByCategory, isAnnouncementCategory } from "@/lib/content-hooks";
+import { useServices, useTestimonials, useSiteSetting, usePageData, useBlogPostsByCategory, isAnnouncementCategory, extractPlainText } from "@/lib/content-hooks";
 import { useBusinessInfo } from "@/lib/business-info";
 import { getIcon } from "@/lib/icon-map";
 
@@ -219,7 +219,7 @@ function HomePage() {
                     <Icon className="size-9" strokeWidth={1.25} />
                   </div>
                   <h3 className="font-serif text-lg md:text-xl mb-3 text-foreground group-hover:text-primary transition-colors">{s.title}</h3>
-                  <p className="text-sm text-muted-foreground leading-relaxed line-clamp-1">{s.short_description}</p>
+                  <p className="text-sm text-muted-foreground leading-relaxed line-clamp-1">{extractPlainText(s.short_description)}</p>
                 </Link>
               );
             })}
