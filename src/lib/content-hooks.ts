@@ -337,6 +337,14 @@ export function renderTipContent(node: any): string {
   return "";
 }
 
+/**
+ * Extract plain text from TipTap JSON (cards, previews, excerpts, meta descriptions).
+ * For full rich-content rendering, use `renderTipContent()`.
+ *
+ * Usage rule:
+ *   Card / Preview / Summary → extractPlainText()
+ *   Full article / About / Service detail → renderTipContent()
+ */
 export function extractPlainText(val: string | null | undefined): string {
   if (!val) return '';
   try {
