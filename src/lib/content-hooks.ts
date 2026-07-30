@@ -346,18 +346,20 @@ export function renderTipContent(node: any): string {
  *   Full article / About / Service detail → renderTipContent()
  */
 export function extractPlainText(val: any): string {
-  if (!val) return '';
-  const doc = typeof val === 'string' ? (() => { try { return JSON.parse(val); } catch { return null; } })() : val;
-  if (doc && typeof doc === 'object' && doc.type === 'doc') {
-    const texts: string[] = [];
-    function walk(n: any) {
-      if (n.type === 'text') texts.push(n.text || '');
-      if (n.content) n.content.forEach(walk);
-    }
-    walk(doc);
-    return texts.join(' ').trim();
+  if (val == null || val === '') return '';
+  let doc = val;
+  if (typeof val === 'string') {
+    try { doc = JSON.parse(val); } catch { return val; }
   }
-  return typeof val === 'string' ? val : String(val);
+  if (!doc || typeof doc !== 'object' || doc.type !== 'doc') return '';
+  const texts: string[] = [];
+  function walk(n: any) {
+    if (!n || typeof n !== 'object') return;
+    if (n.type === 'text' && typeof n.text === 'string') texts.push(n.text);
+    if (Array.isArray(n.content)) n.content.forEach(walk);
+  }
+  walk(doc);
+  return texts.join(' ').replace(/\s+/g, ' ').trim();
 }
 
 export function useServiceFaq(slug: string) {
