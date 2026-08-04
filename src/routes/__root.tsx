@@ -140,6 +140,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     links: [
       { rel: "icon", href: "/logo.png" },
       { rel: "shortcut icon", href: "/logo.png" },
+      { rel: "canonical", href: "https://nikolaskolokotronis.gr/" },
       {
         rel: "stylesheet",
         href: appCss,
