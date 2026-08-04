@@ -125,6 +125,9 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
       { title: "Νικόλας Κολοκοτρώνης — Ψυχολόγος | Νέο Ηράκλειο" },
+      { property: "og:site_name", content: "Νικόλας Κολοκοτρώνης — Ψυχολόγος, Ψυχοθεραπευτής" },
+      { property: "og:locale", content: "el_GR" },
+      { property: "og:url", content: "https://nikolaskolokotronis.gr/" },
       { name: "description", content: "Ένας ασφαλής χώρος για αυτογνωσία, ισορροπία και αλλαγή. Ατομικές συνεδρίες, Ρέικι, NLP και συνδυαστική προσέγγιση στο Νέο Ηράκλειο." },
       { name: "author", content: "Nikolas Kolokotronis" },
       { property: "og:title", content: "Νικόλας Κολοκοτρώνης — Ψυχολόγος" },
@@ -149,11 +152,19 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
   errorComponent: ErrorComponent,
 });
 
+const GA4_MEASUREMENT_ID = "G-R4QXRW0Y88";
+
 function RootShell({ children }: { children: React.ReactNode }) {
   return (
     <html lang="el">
       <head>
         <HeadContent />
+        <script async src={`https://www.googletagmanager.com/gtag/js?id=${GA4_MEASUREMENT_ID}`} />
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `window.dataLayer = window.dataLayer || []; function gtag(){dataLayer.push(arguments);} gtag('js', new Date()); gtag('config', '${GA4_MEASUREMENT_ID}');`,
+          }}
+        />
       </head>
       <body>
         {children}

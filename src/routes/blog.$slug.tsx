@@ -39,13 +39,17 @@ export const Route = createFileRoute("/blog/$slug")({
       .single();
     return data as BlogPost | null;
   },
-  head: ({ loaderData }) => ({
+  head: ({ loaderData, params }) => ({
     meta: [
       { title: loaderData?.meta_title || loaderData?.title || "Άρθρο — Νικόλας Κολοκοτρώνης" },
       { name: "description", content: loaderData?.meta_description || loaderData?.excerpt || "" },
       { property: "og:title", content: loaderData?.title || "" },
       { property: "og:description", content: loaderData?.excerpt || "" },
+      { property: "og:url", content: `https://nikolaskolokotronis.gr/blog/${params.slug}` },
       ...(loaderData?.og_image ? [{ property: "og:image", content: loaderData.og_image }] : []),
+    ],
+    links: [
+      { rel: "canonical", href: `https://nikolaskolokotronis.gr/blog/${params.slug}` },
     ],
   }),
   component: BlogPostPage,

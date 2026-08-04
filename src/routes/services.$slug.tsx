@@ -15,6 +15,11 @@ function formatDate(dateStr: string | null) {
 }
 
 export const Route = createFileRoute("/services/$slug")({
+  head: ({ params }) => ({
+    links: [
+      { rel: "canonical", href: `https://nikolaskolokotronis.gr/services/${params.slug}` },
+    ],
+  }),
   component: ServiceDetailPage,
 });
 
