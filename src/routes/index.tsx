@@ -311,7 +311,7 @@ function HomePage() {
                       </div>
                     )}
                     <div className="p-6">
-                      {(!isAnnouncementCategory(p.category) || announcementShowDates) && (
+                      {(p.show_date === true || (isAnnouncementCategory(p.category) && announcementShowDates)) && (
                         <p className="text-xs uppercase tracking-[0.18em] text-muted-foreground mb-3">{p.published_at ? new Date(p.published_at).toLocaleDateString("el-GR", { year: "numeric", month: "short", day: "numeric" }) : ""}</p>
                       )}
                       <h3 className="font-serif text-xl leading-snug mb-4">{p.title}</h3>
@@ -355,7 +355,7 @@ function HomePage() {
                       </div>
                     )}
                     <div className="p-6">
-                      {(!isAnnouncementCategory(p.category) || announcementShowDates) && (
+                      {(p.show_date === true || (isAnnouncementCategory(p.category) && announcementShowDates)) && (
                         <p className="text-xs uppercase tracking-[0.18em] text-muted-foreground mb-3">{p.published_at ? new Date(p.published_at).toLocaleDateString("el-GR", { year: "numeric", month: "short", day: "numeric" }) : ""}</p>
                       )}
                       <h3 className="font-serif text-xl leading-snug mb-4">{p.title}</h3>

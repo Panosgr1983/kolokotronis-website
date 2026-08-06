@@ -17,6 +17,7 @@ interface BlogPost {
   meta_title: string;
   meta_description: string;
   og_image: string;
+  show_date: boolean;
 }
 
 const TENANT_ID = "00000000-0000-0000-0000-000000000001";
@@ -92,17 +93,18 @@ function BlogPostPage() {
               <ArrowLeft size={14} /> {backLabel}
             </Link>
             <h1 className="font-serif text-xl sm:text-3xl md:text-5xl lg:text-6xl text-foreground leading-tight">{post.title}</h1>
-            {(!isAnnouncement || announcementShowDates) && (
+            {post.show_date === true || (isAnnouncement && announcementShowDates) ? (
               <div className="flex items-center gap-3 mt-3 sm:mt-4 text-xs sm:text-sm text-muted-foreground">
                 <Calendar size={14} />
                 <span>{formatDate(post.published_at)}</span>
                 {post.category && <><span>·</span><span className="text-primary font-medium">{CATEGORY_LABELS[post.category] || post.category}</span></>}
               </div>
-            )}
-            {isAnnouncement && !announcementShowDates && post.category && (
-              <div className="flex items-center gap-3 mt-3 sm:mt-4 text-xs sm:text-sm text-muted-foreground">
-                <span className="text-primary font-medium">{CATEGORY_LABELS[post.category] || post.category}</span>
-              </div>
+            ) : (
+              post.category && (
+                <div className="flex items-center gap-3 mt-3 sm:mt-4 text-xs sm:text-sm text-muted-foreground">
+                  <span className="text-primary font-medium">{CATEGORY_LABELS[post.category] || post.category}</span>
+                </div>
+              )
             )}
           </div>
         </div>

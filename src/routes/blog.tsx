@@ -139,7 +139,7 @@ function BlogPage() {
                   <div className="flex items-center gap-3 text-xs uppercase tracking-wider text-muted-foreground mb-3">
                     {p.category && <span className="text-primary font-medium">{CATEGORY_LABELS[p.category] || p.category}</span>}
                     {p.category && <span>·</span>}
-                    {(!isAnnouncementCategory(p.category) || announcementShowDates) && (
+                    {(p.show_date === true || (isAnnouncementCategory(p.category) && announcementShowDates)) && (
                       <span>{formatDate(p.published_at)}</span>
                     )}
                   </div>

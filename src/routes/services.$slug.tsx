@@ -204,7 +204,7 @@ function ServiceDetailPage() {
                     <div className="flex items-center gap-3 text-xs uppercase tracking-wider text-muted-foreground mb-3">
                       <span className="text-primary font-medium">{p.category}</span>
                       {p.category && <span>·</span>}
-                      {(!isAnnouncement || announcementShowDates) && (
+                      {(p.show_date === true || (isAnnouncement && announcementShowDates)) && (
                         <span>{formatDate(p.published_at)}</span>
                       )}
                     </div>
