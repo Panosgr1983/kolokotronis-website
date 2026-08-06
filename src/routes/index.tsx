@@ -9,6 +9,11 @@ import { useBusinessInfo } from "@/lib/business-info";
 import { getIcon } from "@/lib/icon-map";
 
 export const Route = createFileRoute("/")({
+  head: () => ({
+    links: [
+      { rel: "canonical", href: "https://nikolaskolokotronis.gr/" },
+    ],
+  }),
   component: HomePage,
 });
 
