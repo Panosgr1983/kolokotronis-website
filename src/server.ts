@@ -180,6 +180,17 @@ async function handleApiContact(_request: Request): Promise<Response> {
   return jsonResponse({ success: true });
 }
 
+function applyHtmlCachePolicy(response: Response): Response {
+  const contentType = response.headers.get("content-type") ?? "";
+  if (!contentType.includes("text/html")) return response;
+
+  // HTML is dynamic (DB-driven content). Revalidate on every request so
+  // users never see stale content after a deploy. no-cache = cache + revalidate,
+  // NOT no-store (browsers/CDN may still store for ETag/conditional requests).
+  response.headers.set("cache-control", "no-cache, must-revalidate");
+  return response;
+}
+
 export default {
   async fetch(request: Request) {
     try {
@@ -191,7 +202,7 @@ export default {
 
       const handler = await getServerEntry();
       const response = await handler.fetch(request);
-      return await normalizeCatastrophicSsrResponse(response);
+      return applyHtmlCachePolicy(await normalizeCatastrophicSsrResponse(response));
     } catch (error) {
       console.error(error);
       return brandedErrorResponse();

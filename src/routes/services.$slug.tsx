@@ -1,10 +1,12 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { ArrowLeft, ArrowRight, Calendar, ChevronDown } from "lucide-react";
 import { PageShell } from "@/components/PageShell";
 import { CtaBand } from "@/components/CtaBand";
-import { useServiceBySlug, usePageData, useRelatedArticles, useSiteSetting, isAnnouncementCategory, useServiceFaq, renderTipContent } from "@/lib/content-hooks";
+import { usePageData, useRelatedArticles, useSiteSetting, isAnnouncementCategory, useServiceFaq, renderTipContent, extractPlainText } from "@/lib/content-hooks";
 import { getIcon } from "@/lib/icon-map";
 import { Accordion, AccordionItem, AccordionTrigger, AccordionContent } from "@/components/ui/accordion";
+import { supabase } from "@/lib/supabase";
+import { TENANT_ID } from "@/lib/content-hooks";
 
 const monthsGR = ["Ιαν", "Φεβ", "Μαρ", "Απρ", "Μαϊ", "Ιουν", "Ιουλ", "Αυγ", "Σεπ", "Οκτ", "Νοε", "Δεκ"];
 
@@ -14,18 +16,70 @@ function formatDate(dateStr: string | null) {
   return `${d.getDate()} ${monthsGR[d.getMonth()]} ${d.getFullYear()}`;
 }
 
+function truncate(str: string, max: number): string {
+  const s = str.trim();
+  return s.length > max ? `${s.slice(0, max - 1)}…` : s;
+}
+
+function absoluteUrl(url: string | null | undefined): string {
+  if (!url) return "";
+  if (url.startsWith("http://") || url.startsWith("https://")) return url;
+  if (url.startsWith("/")) return `https://nikolaskolokotronis.gr${url}`;
+  return `https://nikolaskolokotronis.gr/${url}`;
+}
+
 export const Route = createFileRoute("/services/$slug")({
-  head: ({ params }) => ({
-    links: [
-      { rel: "canonical", href: `https://nikolaskolokotronis.gr/services/${params.slug}` },
-    ],
-  }),
+  loader: async ({ params }) => {
+    const { data } = await supabase
+      .from("services")
+      .select("*")
+      .eq("slug", params.slug)
+      .eq("tenant_id", TENANT_ID)
+      .eq("is_active", true)
+      .maybeSingle();
+    if (!data) throw notFound();
+    return data as any;
+  },
+  head: ({ loaderData, params }) => {
+    const service = loaderData as any;
+    const desc = service
+      ? truncate(extractPlainText(service.meta_description || service.short_description), 160)
+      : "";
+    const ogImage = service ? absoluteUrl(service.og_image || service.image_url) : "";
+    return {
+      meta: [
+        { title: service?.meta_title || service?.title || "Υπηρεσία — Νικόλας Κολοκοτρώνης" },
+        ...(desc ? [{ name: "description", content: desc }] : []),
+        ...(service?.title ? [{ property: "og:title", content: service.title }] : []),
+        ...(desc ? [{ property: "og:description", content: desc }] : []),
+        ...(ogImage ? [{ property: "og:image", content: ogImage }] : []),
+        { property: "og:url", content: `https://nikolaskolokotronis.gr/services/${params.slug}` },
+      ],
+      links: [
+        { rel: "canonical", href: `https://nikolaskolokotronis.gr/services/${params.slug}` },
+      ],
+    };
+  },
   component: ServiceDetailPage,
+  notFoundComponent: () => (
+    <PageShell>
+      <div className="container-page py-32 text-center">
+        <h1 className="font-serif text-4xl mb-4">Η υπηρεσία δεν βρέθηκε</h1>
+        <p className="text-muted-foreground mb-8">Η υπηρεσία που αναζητάτε δεν υπάρχει.</p>
+        <Link to="/services" className="btn-cta">Επιστροφή στις υπηρεσίες</Link>
+      </div>
+    </PageShell>
+  ),
+  pendingComponent: () => (
+    <PageShell>
+      <div className="flex justify-center py-32"><div className="size-8 border-2 border-primary/30 border-t-primary rounded-full animate-spin" /></div>
+    </PageShell>
+  ),
 });
 
 function ServiceDetailPage() {
   const { slug } = Route.useParams();
-  const { data: service, isLoading } = useServiceBySlug(slug);
+  const service = Route.useLoaderData();
   const svcPageData = usePageData()[`/services/${slug}`] || {};
   const { data: relatedData } = useRelatedArticles(slug);
   const relatedPosts = relatedData?.articles ?? [];
@@ -34,26 +88,6 @@ function ServiceDetailPage() {
   const { data: faqData } = useServiceFaq(slug);
   const faqEntries = faqData ?? [];
   const serviceFaqVisible = (useSiteSetting("service_faq_visible") as string) === "true";
-
-  if (isLoading) {
-    return (
-      <PageShell>
-        <div className="flex justify-center py-32"><div className="size-8 border-2 border-primary/30 border-t-primary rounded-full animate-spin" /></div>
-      </PageShell>
-    );
-  }
-
-  if (!service) {
-    return (
-      <PageShell>
-        <div className="container-page py-32 text-center">
-          <h1 className="font-serif text-4xl mb-4">Η υπηρεσία δεν βρέθηκε</h1>
-          <p className="text-muted-foreground mb-8">Η υπηρεσία που αναζητάτε δεν υπάρχει.</p>
-          <Link to="/services" className="btn-cta">Επιστροφή στις υπηρεσίες</Link>
-        </div>
-      </PageShell>
-    );
-  }
 
   const Icon = getIcon(service.icon);
 

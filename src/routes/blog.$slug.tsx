@@ -1,4 +1,4 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { ArrowLeft, Calendar } from "lucide-react";
 import { PageShell } from "@/components/PageShell";
 import { supabase } from "@/lib/supabase";
@@ -36,8 +36,9 @@ export const Route = createFileRoute("/blog/$slug")({
       .eq("slug", params.slug)
       .eq("tenant_id", TENANT_ID)
       .eq("is_published", true)
-      .single();
-    return data as BlogPost | null;
+      .maybeSingle();
+    if (!data) throw notFound();
+    return data as BlogPost;
   },
   head: ({ loaderData, params }) => ({
     meta: [
@@ -53,6 +54,11 @@ export const Route = createFileRoute("/blog/$slug")({
     ],
   }),
   component: BlogPostPage,
+  pendingComponent: () => (
+    <PageShell>
+      <div className="flex justify-center py-32"><div className="size-8 border-2 border-primary/30 border-t-primary rounded-full animate-spin" /></div>
+    </PageShell>
+  ),
   notFoundComponent: () => (
     <PageShell>
       <div className="container-page py-20 text-center">
